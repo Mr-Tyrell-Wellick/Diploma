@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  Diploma
+
+  Created by Ульви Пашаев on 07.06.2023.
+  
+*/
+
+
+// MARK: - LoggedOutScreen
+"signUpButtonTitle1" = "Зарегистрироваться";
+"loginButtonTitle1" = "Уже есть аккаунт";
