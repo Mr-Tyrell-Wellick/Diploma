@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - LoggedOutSceen
+// MARK: - LoggedOut Sceen
 enum Strings: String {
 case signUpButtonTitle1 = "signUpButtonTitle1"
 case loginButtonTitle1 = "loginButtonTitle1"

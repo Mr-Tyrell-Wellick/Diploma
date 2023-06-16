@@ -9,17 +9,19 @@ import UIKit
 
 extension UIColor {
 
+    // MARK: - LoggedOut Screen
+
     class var loggedOutBackgroundColor: UIColor {
         UIColor(named: "loggedOutBackgroundColor") ?? gray
     }
 
-    // MARK: - Title
+    // Title
     class var titleColor: UIColor {
         UIColor(named: "titleColor") ?? systemBackground
     }
 
 
-// MARK: - Buttons and TextFields
+// Buttons and TextFields
     class var buttonBackgroundColor: UIColor {
         UIColor(named: "buttonBackgroundColor") ?? systemBackground
     }
@@ -34,7 +36,7 @@ extension UIColor {
     }
 
 
-    //MARK: - StackView
+    // StackView
     class var stackViewTextFieldColor: UIColor {
         UIColor(named: "stackViewTextFieldColor") ?? black
     }

@@ -136,6 +136,13 @@
 			path = TabBarModule;
 			sourceTree = "<group>";
 		};
+		F75087CD2A3A38C000435F91 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		F774B9D62A29F4A0003D4F02 = {
 			isa = PBXGroup;
 			children = (
@@ -155,19 +162,20 @@
 		F774B9E12A29F4A0003D4F02 /* Diploma */ = {
 			isa = PBXGroup;
 			children = (
-				F7293F172A2A86F40063AC20 /* AppLayer */,
-				F7B23B6B2A2FB4BA0066256D /* Root */,
-				F7B23B792A30731E0066256D /* Home */,
-				F7B23B7A2A3077480066256D /* LoggedOut */,
-				F7293F272A2D1E630063AC20 /* SignUp */,
-				F7293F2C2A2DF9400063AC20 /* TabBarModule */,
-				F7293F1B2A2A87BD0063AC20 /* Utils */,
-				F7293F1A2A2A878F0063AC20 /* Resources */,
-				F7293F192A2A877B0063AC20 /* ServiceLayer */,
+				F774B9F02A29F4A1003D4F02 /* Info.plist */,
 				F774B9EB2A29F4A1003D4F02 /* Assets.xcassets */,
 				F7293F322A2DFE870063AC20 /* Colors.xcassets */,
 				F774B9ED2A29F4A1003D4F02 /* LaunchScreen.storyboard */,
-				F774B9F02A29F4A1003D4F02 /* Info.plist */,
+				F7293F172A2A86F40063AC20 /* AppLayer */,
+				F75087CD2A3A38C000435F91 /* Common */,
+				F7B23B792A30731E0066256D /* Home */,
+				F7B23B7A2A3077480066256D /* LoggedOut */,
+				F7293F1A2A2A878F0063AC20 /* Resources */,
+				F7B23B6B2A2FB4BA0066256D /* Root */,
+				F7293F192A2A877B0063AC20 /* ServiceLayer */,
+				F7293F272A2D1E630063AC20 /* SignUp */,
+				F7293F2C2A2DF9400063AC20 /* TabBarModule */,
+				F7293F1B2A2A87BD0063AC20 /* Utils */,
 			);
 			path = Diploma;
 			sourceTree = "<group>";

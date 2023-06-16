@@ -6,7 +6,7 @@
   
 */
 
-// MARK: - LoggedOutScreen
+// MARK: - LoggedOut Screen
 "signUpButtonTitle1" = "Sign up";
 "loginButtonTitle1" = "Already have an account";
 
