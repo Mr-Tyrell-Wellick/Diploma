@@ -29,6 +29,10 @@ extension RootViewController: RootPresentable {
 extension RootViewController: RootViewControllable {
     func show(_ vc: UIViewController) {
         presentViewControllerFullScreen(viewController: vc)
-        
+    }
+    
+    func dismiss(_ completionHandler: () -> ()) {
+        dismiss(animated: true)
+        completionHandler()
     }
 }

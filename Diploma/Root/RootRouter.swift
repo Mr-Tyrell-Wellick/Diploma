@@ -14,10 +14,12 @@ protocol RootInteractable: Interactable {
 
 protocol RootViewControllable: ViewControllable {
     func show(_ vc: UIViewController)
+    func dismiss(_ completionHandler: () -> ())
 }
 
 final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, RootRouting {
-    init(interactor: RootInteractable,
+    init(
+        interactor: RootInteractable,
          viewController: RootViewControllable,
          loggedOutBuilder: LoggedOutBuildable
     ) {

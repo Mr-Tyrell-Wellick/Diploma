@@ -16,27 +16,48 @@ protocol RootPresentable: Presentable {
     var listener: RootViewControllerListener? { get set }
 }
 
-final class RootInteractor:
-    PresentableInteractor<RootPresentable>, RootInteractable {
-        weak var router: RootRouting?
+final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteractable {
+    
+    weak var router: RootRouting?
 
-        override init(presenter: RootPresentable) {
-            super.init(presenter: presenter)
-            presenter.listener = self
-        }
-
-        override func didBecomeActive() {
-            logActivate()
-            router?.routeToLoggedOut()
-        }
-
-        override func willResignActive() {
-            logDeactivate()
-        }
+    init(
+        presenter: RootPresentable,
+         userStream: UserStream
+    ) {
+        self.userStream = userStream
+        super.init(presenter: presenter)
+        presenter.listener = self
     }
+    
+    override func didBecomeActive() {
+        logActivate()
+        subscribeOnUser()
+        //            router?.routeToLoggedOut()
+    }
+    
+    override func willResignActive() {
+        logDeactivate()
+    }
+    
+    private func subscribeOnUser() {
+        userStream
+            .user
+            .bind { [unowned self] user in
+            guard let user else {
+                router?.routeToLoggedOut()
+                return
+            }
+            //TODO: - добавить потом переход на routeToHome
+//                router.routeToHome()
+        }
+        .disposeOnDeactivate(interactor: self)
+    }
+    
+    private var userStream: UserStream
+}
 
-    // MARK: - RootViewControllerListener
+// MARK: - RootViewControllerListener
 
 extension RootInteractor: RootViewControllerListener {
-
+    
 }
