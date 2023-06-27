@@ -102,7 +102,7 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
     private let signUpAction = BehaviorRelay<SignUpCredentialsModel?>(value: nil)
 }
 
-// MARK: - LoggedInViewControllerListener
+// MARK: - SignUpViewControllerListener
 
 extension SignUpInteractor: SignUpViewControllerListener {
     func didClose() {
