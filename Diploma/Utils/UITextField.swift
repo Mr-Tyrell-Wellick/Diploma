@@ -20,14 +20,13 @@ extension UITextField {
         leftViewMode = .always
     }
 
-    //TODO: - добавить нужные цвета!!!!!!
     func setupTextFieldAndAttributes(placeholder: String, textColor: UIColor) {
         layer.borderColor = UIColor.lightGray.cgColor
         font = .systemFont(ofSize: 16)
         self.textColor = textColor
 
         let placeholderAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.yellow,
+            .foregroundColor: UIColor.titleColor,
             .font: self.font!
         ]
         attributedPlaceholder = NSAttributedString(

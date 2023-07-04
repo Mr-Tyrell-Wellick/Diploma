@@ -7,12 +7,22 @@
 
 import Foundation
 
-// MARK: - LoggedOut Sceen
 enum Strings: String {
-case signUpButtonTitle1
-case loginButtonTitle1
-
-
+    
+    // MARK: - LoggedOut Sceen
+    
+    case loginButton
+    case signUpText
+    case highLighthedText
+    case passwordTextField
+    case loginTextField
+    
+    
+    // MARK: - SignUp Screen
+    
+    case signUpButton
+    case signUpLabel
+    
     var localized: String {
         self.rawValue.localizedString()
     }

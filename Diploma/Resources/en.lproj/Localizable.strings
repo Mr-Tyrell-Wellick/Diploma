@@ -1,12 +1,20 @@
 /* 
-  Localizable.strings
-  Diploma
-
-  Created by Ульви Пашаев on 07.06.2023.
-  
-*/
+ Localizable.strings
+ Diploma
+ 
+ Created by Ульви Пашаев on 07.06.2023.
+ 
+ */
 
 // MARK: - LoggedOut Screen
 
-"signUpButtonTitle1" = "Sign up";
-"loginButtonTitle1" = "Already have an account";
+"loginTextField" = "Email";
+"passwordTextField" = "Password";
+"loginButton" = "Log in";
+"signUpText" = "Don't have any account yet? Sign up";
+"highLighthedText" = "Sign up";
+
+// MARK: - SignUp Screen
+
+"signUpButton" = "Sign up";
+"signUpLabel" = "SIGN UP";

@@ -30,18 +30,30 @@ extension UIColor {
         UIColor(named: "buttonColor") ?? .black
     }
 
-
-    class var textFieldBackgroundColor: UIColor {
-        UIColor(named: "textFieldBackgroundColor") ?? .gray
+    class var buttonTextColor: UIColor {
+        UIColor(named: "buttonTextColor") ?? .systemBackground
     }
 
-
-    // StackView
-    class var stackViewTextFieldColor: UIColor {
-        UIColor(named: "stackViewTextFieldColor") ?? black
+    class var separatorColor: UIColor {
+        UIColor(named: "separatorColor") ?? black
     }
 
-    class var lineColor: UIColor {
-        UIColor(named: "lineColor") ?? green
+    class var textFieldTextColor: UIColor {
+        UIColor(named: "textFieldTextColor") ?? systemBackground
     }
+
+    class var loggedOutLabelColor: UIColor {
+        UIColor(named: "loggedOutLabelColor") ?? blue
+    }
+
+    class var loggedOutAttributeColor: UIColor {
+UIColor(named: "loggedOutAttributeColor") ?? green
+    }
+
+    // MARK: - SignUp Screen
+
+    class var stripColor: UIColor {
+        UIColor(named: "stripColor") ?? .gray
+    }
+
 }

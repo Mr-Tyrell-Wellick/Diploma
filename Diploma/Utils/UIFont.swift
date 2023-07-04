@@ -9,8 +9,15 @@ import UIKit
 
 extension UIFont {
 
-    // MARK: - SignUp Screen
+    // MARK: - LoggedOut Screen
+
     class var signUpLabelFont: UIFont {
-        systemFont(ofSize: 40, weight: .bold)
+        systemFont(ofSize: 19, weight: .regular)
     }
+
+    class var signUpLabelInSignUpFont: UIFont {
+        systemFont(ofSize: 25, weight: .bold)
+    }
+
+
 }

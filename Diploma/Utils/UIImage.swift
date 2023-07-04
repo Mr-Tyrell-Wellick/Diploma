@@ -9,7 +9,7 @@ import UIKit
 
 extension UIImage {
 
-    //MARK: - LoggedOut Screen
+    // MARK: - LoggedOut Screen
 
     // Logo
     class var logoImage: UIImage {
@@ -28,5 +28,12 @@ extension UIImage {
 
     class var lockImage: UIImage {
         UIImage(named: "lock") ?? UIImage()
+    }
+
+
+    // MARK: - SignUp Screen
+
+    class var launchImage: UIImage {
+        UIImage(named: "launchScreen") ?? UIImage()
     }
 }

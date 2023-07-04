@@ -18,34 +18,33 @@ protocol LoggedOutViewControllerListener: AnyObject {
 }
 
 final class LoggedOutViewController: UIViewController {
-
+    
     weak var listener: LoggedOutViewControllerListener?
-
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .loggedOutBackgroundColor
         addView()
         addConstraints()
-
         subscribeFaceIDTap()
         subscribeOnSignUpTap()
         subscribeloginButtonTap()
     }
-
+    
     // MARK: - Functions
     private func addView() {
         view.addSubview(stackViewTextField)
         view.addSubview(logoImage)
         view.addSubview(faceIDImage)
         view.addSubview(loginButton)
-        view.addSubview(signUpButton)
+        view.addSubview(signUpLabel)
         view.addSubview(loadingIndicator)
-
+        
         stackViewTextField.addArrangedSubview(loginTextField)
         stackViewTextField.addArrangedSubview(passwordTextField)
     }
-
+    
     private func subscribeFaceIDTap() {
         faceIDImage.rx
             .tapGesture()
@@ -55,9 +54,9 @@ final class LoggedOutViewController: UIViewController {
             }
             .disposed(by: disposeBag)
     }
-
+    
     private func subscribeOnSignUpTap() {
-        signUpButton.rx
+        signUpLabel.rx
             .tapGesture()
             .when(.recognized)
             .bind { [unowned self] _ in
@@ -65,7 +64,9 @@ final class LoggedOutViewController: UIViewController {
             }
             .disposed(by: disposeBag)
     }
-
+    
+    
+    //TODO: - заменить print на функционал!
     private func subscribeloginButtonTap() {
         loginButton.rx
             .tapGesture()
@@ -75,66 +76,79 @@ final class LoggedOutViewController: UIViewController {
             }
             .disposed(by: disposeBag)
     }
-
+    
     private func addConstraints() {
         logoImage.top(to: view, offset: Constants.LogoImage.topOffset)
         logoImage.centerXToSuperview()
         logoImage.width(Constants.LogoImage.widthAndHeightOffset)
         logoImage.height(Constants.LogoImage.widthAndHeightOffset)
-
+        
         faceIDImage.centerXToSuperview()
         faceIDImage.topToBottom(of: logoImage, offset: Constants.FaceIDImage.topToBottomOffset)
         faceIDImage.height(Constants.FaceIDImage.widthAndHeightOfsset)
         faceIDImage.width(Constants.FaceIDImage.widthAndHeightOfsset)
-
-        loadingIndicator.bottomToTop(of: faceIDImage,offset: 20)
+        
+        loadingIndicator.bottomToTop(of: faceIDImage,offset: Constants.LoadingIndicator.bottomToTopOffset)
         loadingIndicator.centerXToSuperview()
-
-
-        stackViewTextField.centerXToSuperview()
-        stackViewTextField.topToBottom(of: faceIDImage, offset: 120)
-        stackViewTextField.leadingToSuperview(offset: 16)
-        stackViewTextField.trailingToSuperview(offset: 16)
-
-
-
-
-        signUpButton.topToBottom(of: faceIDImage, offset: Constants.SignUpButton.TopToBottomOffset)
-        signUpButton.leadingToSuperview(offset: Constants.SignUpButton.leadingAndTrailingOffset)
-        signUpButton.trailingToSuperview(offset: Constants.SignUpButton.leadingAndTrailingOffset)
-        signUpButton.height(Constants.SignUpButton.heightOffset)
-
-        loginButton.topToBottom(of: signUpButton, offset: Constants.LoginButton.topToBottomOffset)
-        loginButton.centerXToSuperview()
+        
+        stackViewTextField.topToBottom(of: faceIDImage, offset: Constants.StackViewTextField.topToBottomOffset)
+        stackViewTextField.leadingToSuperview(offset: Constants.StackViewTextField.leadingAndTrailingToSuperviewOffset)
+        stackViewTextField.trailingToSuperview(offset: Constants.StackViewTextField.leadingAndTrailingToSuperviewOffset)
+        
+        loginTextField.leading(to: stackViewTextField)
+        loginTextField.centerX(to: view)
+        
+        passwordTextField.leadingToSuperview()
+        passwordTextField.trailingToSuperview()
+        passwordTextField.centerX(to: view)
+        
+        loginButton.topToBottom(of: passwordTextField, offset: Constants.LoginButton.TopToBottomOffset)
+        loginButton.leadingToSuperview(offset: Constants.LoginButton.leadingAndTrailingOffset)
+        loginButton.trailingToSuperview(offset: Constants.LoginButton.leadingAndTrailingOffset)
+        loginButton.height(Constants.LoginButton.heightOffset)
+        
+        signUpLabel.topToBottom(of: loginButton, offset: Constants.SignUpLabel.topToBottomOffset)
+        signUpLabel.height(Constants.SignUpLabel.heightOffset)
+        signUpLabel.leadingToSuperview()
+        signUpLabel.trailingToSuperview()
     }
-
+    
     // MARK: - Enums
-
+    
     private enum Constants {
         enum LogoImage {
-            static let topOffset: CGFloat = 124
+            static let topOffset: CGFloat = 60
             static let widthAndHeightOffset: CGFloat = 300
         }
-
-        enum SignUpButton {
-            static let TopToBottomOffset: CGFloat = 20
+        
+        enum LoginButton {
+            static let TopToBottomOffset: CGFloat = 35
             static let heightOffset: CGFloat = 50
             static let leadingAndTrailingOffset: CGFloat = 35
         }
-
-        enum LoginButton {
-            static let topToBottomOffset: CGFloat = 80
-
+        
+        enum SignUpLabel {
+            static let topToBottomOffset: CGFloat = 40
+            static let heightOffset: CGFloat = 20
         }
-
+        
         enum FaceIDImage {
             static let topToBottomOffset: CGFloat = 15
             static let widthAndHeightOfsset: CGFloat = 33
         }
+        
+        enum LoadingIndicator {
+            static let  bottomToTopOffset: CGFloat = 20
+        }
+        
+        enum StackViewTextField {
+            static let topToBottomOffset: CGFloat = 30
+            static let leadingAndTrailingToSuperviewOffset: CGFloat = 20
+        }
     }
-
+    
     // MARK: - Properties
-
+    
     private let stackViewTextField: UIStackView = {
         $0.axis = .vertical
         $0.distribution = .equalCentering
@@ -142,79 +156,84 @@ final class LoggedOutViewController: UIViewController {
         $0.spacing = 30
         return $0
     }(UIStackView())
-
-// LoginTextField
+    
+    // Login TextField
     private let loginTextField: UITextField = {
         $0.addLeftImage(.atImage)
-    // TODO: - локализовать!!!!
         $0.setupTextFieldAndAttributes(
-            placeholder: "E-mail",
-            textColor: .black
+            placeholder: Strings.loginTextField.localized,
+            textColor: .textFieldTextColor
         )
         $0.keyboardType = .emailAddress
-    //TODO: - дообавить цвет (если что исправить)
-        $0.setBottomBorder(offset: 15,
-                           color: UIColor.separator,
-                           cornerRadius: 8)
+        $0.setBottomBorder(
+            offset: 15,
+            color: .separatorColor,
+            cornerRadius: 8
+        )
         return $0
     }(UITextField())
-
+    
     // Password TextField
     private let passwordTextField: UITextField = {
         $0.addLeftImage(.lockImage)
-        // TODO: - локализовать!!!!
         $0.setupTextFieldAndAttributes(
-            placeholder: "Password",
-            textColor: .black
+            placeholder: Strings.passwordTextField.localized,
+            textColor: .textFieldTextColor
         )
-        //TODO: - дообавить цвет (если что исправить)
         $0.setBottomBorder(
             offset: 15,
-            color: .separator,
+            color: .separatorColor,
             cornerRadius: 8
         )
         $0.isSecureTextEntry = true
         return $0
     }(UITextField())
-
-    // логотип
+    
+    // Logo
     private lazy var logoImage: UIImageView = {
         $0.image = .logoImage
         return $0
     }(UIImageView())
-
+    
     // Face ID
     private lazy var faceIDImage: UIImageView = {
         $0.isUserInteractionEnabled = true
         $0.image = .faceIDImage
         return $0
     }(UIImageView())
-
-    // кнопка "sign Up"
-    private let signUpButton: UIButton = {
-        $0.setTitle(Strings.signUpButtonTitle1.localized, for: .normal)
-        $0.setTitleColor(UIColor.buttonColor, for: .normal)
-        $0.backgroundColor = .buttonBackgroundColor
-        $0.layer.cornerRadius = 12
-        $0.layer.borderWidth = 0.5
-        return $0
-    }(UIButton())
-
-    // кнопка login
+    
+    // Login button
     private let loginButton: UIButton = {
-        $0.setTitle(Strings.loginButtonTitle1.localized, for: .normal)
-        $0.setTitleColor(UIColor.textFieldBackgroundColor, for: .normal)
+        
+        $0.setupButton(
+            CustomButtonType.defaultButton(
+                title: Strings.loginButton.localized,
+                titleColor: .buttonColor,
+                backgroundColor: .buttonBackgroundColor
+            )
+        )
         return $0
     }(UIButton())
     
-
-    // индикатор загрузки
+    // Sign Up label
+    private let signUpLabel: UILabel = {
+        $0.setupLabelAndAttributes(
+            allText: Strings.signUpText.localized,
+            highLighthedText: Strings.highLighthedText.localized,
+            textColor: .loggedOutLabelColor
+        )
+        $0.textAlignment = .center
+        $0.font = .signUpLabelFont
+        return $0
+    }(UILabel())
+    
+    // Loading indicator
     private lazy var loadingIndicator: UIActivityIndicatorView = {
         $0.hidesWhenStopped = true
         $0.isHidden = true
         return $0
     }(UIActivityIndicatorView())
-
+    
     private let disposeBag = DisposeBag()
 }
 

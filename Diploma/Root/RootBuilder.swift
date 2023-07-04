@@ -16,8 +16,10 @@ final class RootComponent: Component<EmptyDependency> {
     var userMutableStream: UserMutableStream
 
 }
-// TODO: - потом добавить!
-//extension RootComponent: HomeDependency {
+
+extension RootComponent: HomeDependency {
+
+}
 
 extension RootComponent: LoggedOutDependency {
     
@@ -35,10 +37,12 @@ final class RootBuilder: Builder<EmptyDependency>, RootBuildable {
             presenter: viewController,
             userStream: component.userMutableStream
         )
+        let homeBuilder = HomeBuilder(dependency: component)
         let loggedOutBuilder = LoggedOutBuilder(dependency: component)
         return RootRouter(
             interactor: interactor,
             viewController: viewController,
+            homeBuilder: homeBuilder,
             loggedOutBuilder: loggedOutBuilder
         )
     }

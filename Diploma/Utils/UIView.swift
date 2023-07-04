@@ -17,10 +17,9 @@ extension UIView {
         borderView.backgroundColor = color
         borderView.layer.cornerRadius = cornerRadius
         addSubview(borderView)
-
+        
         borderView.trailingToSuperview()
         borderView.leadingToSuperview()
-        borderView.bottomToSuperview()
         borderView.bottomToSuperview(offset: offset)
         borderView.height(1)
     }
