@@ -5,6 +5,7 @@
 //  Created by Ульви Пашаев on 07.06.2023.
 //
 
+import Foundation
 import RIBs
 import RxRelay
 import RxSwift
@@ -17,25 +18,38 @@ struct LoginCredentialsModel {
 protocol LoggedOutRouting: ViewableRouting {
     func routeToSignUp()
     func signUpDidClose()
+    func closeSignUp()
 }
 
 protocol LoggedOutPresentable: Presentable {
     func showLoadingIndicator(_ show: Bool)
+    func fillCredentials(_ credentialModel: KeychainCredentialsModel)
+    func configureBiometryButton(_ isEnabled: Bool)
 
     var listener: LoggedOutViewControllerListener? { get set }
 }
 
+protocol LoggedOutListener: AnyObject {
+    func didSuccessLogin()
+}
+
+
 final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, LoggedOutInteractable {
 
     weak var router: LoggedOutRouting?
+    weak var listener: LoggedOutListener?
 
     init(
         presenter: LoggedOutPresentable,
         biometryAuthenticationService: BiometryAuthenticationService,
-        firebaseAuthentication: FirebaseAuthenticationService
+        firebaseAuthentication: FirebaseAuthenticationService,
+        keychainService: KeychainService,
+        userDefaults: UserDefaultsMutableStorage
     ) {
         self.biometryAuthenticationService = biometryAuthenticationService
         self.firebaseAuthentication = firebaseAuthentication
+        self.keychainService = keychainService
+        self.userDefaults = userDefaults
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -45,32 +59,111 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
         subscribeOnBiometry()
         subscribeOnSignUp()
         subscribeOnLogIn()
+        subscribeOnUiReady()
     }
 
     override func willResignActive() {
         logDeactivate()
     }
 
+    // TODO: - проверить, почему вылазит ошибка!!!!!!
+    private func subscribeOnUiReady() {
+        uiReady
+            .filter { $0 }
+            .do { [unowned self] _ in
+                presenter.configureBiometryButton(userDefaults.isBiometryEnabled ?? false)
+            }
+            .map {[unowned self] _ in
+                userDefaults.isBiometryEnabled ?? false
+            }
+            .filter { $0 }
+            .compactMap { [unowned self] _ -> KeychainCredentialsModel? in
+                guard let data = keychainService.load(),
+                      let model = Data.decode(
+                        data: data,
+                        as: KeychainCredentialsModel.self
+                      ) else { return nil }
+                return model
+            }
+            .do { [unowned self] credentialsModel in
+                presenter.fillCredentials(credentialsModel)
+                presenter.showLoadingIndicator(true)
+            }
+            .flatMapLatest { [unowned self] credentialsModel in
+                firebaseAuthentication.login(
+                    login: credentialsModel.login,
+                    password: credentialsModel.password
+                )
+                .catch { [unowned self] error in
+                    handleAuthError(error)
+                    return .just(false)
+                }
+            }
+            .bind { [unowned self] success in
+                presenter.showLoadingIndicator(false)
+                if success {
+                    listener?.didSuccessLogin()
+                    print("success auth")
+                } else {
+                    print("not success auth")
+                }
+            }
+            .disposeOnDeactivate(interactor: self)
+    }
+
     private func subscribeOnBiometry() {
         biometryValue
+            .filter { $0 }
+            .withLatestFrom(uiReady)
             .filter { $0 }
             .flatMapLatest { [unowned self] _ -> Single<Bool> in
                 biometryAuthenticationService
                     .authorize()
-                    .catch { [unowned self] _ in
-                        handleBiometryError()
+                    .catch { [unowned self] error in
+                        handleBiometryError(error)
                         return .just(false)
                     }
             }
             .filter { $0 }
-            .bind(onNext: { success in
-                print(success)
-            })
+            .compactMap { [unowned self] _ -> KeychainCredentialsModel? in
+                guard let data = keychainService.load(),
+                      let model = Data.decode(
+                        data: data,
+                        as: KeychainCredentialsModel.self
+                      ) else { return nil }
+                return model
+            }
+            .do { [unowned self] credenstialsModel in
+                presenter.fillCredentials(credenstialsModel)
+                presenter.showLoadingIndicator(true)
+            }
+            .flatMapLatest { [unowned self] credentialsModel in
+                firebaseAuthentication.login(
+                    login: credentialsModel.login,
+                    password: credentialsModel.password
+                )
+                .catch { [unowned self] error in
+                    handleAuthError(error)
+                    return .just(false)
+                }
+            }
+            .bind { [unowned self] success in
+                presenter.showLoadingIndicator(false)
+                if success {
+                    listener?.didSuccessLogin()
+                    print("success auth")
+                } else {
+                    print("not success auth")
+                }
+            }
             .disposeOnDeactivate(interactor: self)
     }
 
     private func subscribeOnLogIn() {
-        logInAction.compactMap { $0 }
+        Observable
+            .combineLatest(logInAction, uiReady)
+            .filter { $0.1 }
+            .compactMap { $0.0 }
             .do { [unowned self] _ in
                 presenter.showLoadingIndicator(true)
             }
@@ -80,28 +173,47 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
                     password: model.password
                 )
                 .catch { [unowned self] error in
-                    handleError(error)
+                    handleAuthError(error)
                     return .just(false)
                 }
             }
-            .bind { [unowned self] result in
+            .do { [unowned self] success in
                 presenter.showLoadingIndicator(false)
-
-                if result {
-                    print("sucess auth")
+                if success {
+                    print("success auth")
                 } else {
                     print("not success auth")
                 }
             }
+            .flatMapLatest { [unowned self] _ in
+                biometryAuthenticationService
+                    .authorize()
+                    .catch { [unowned self] error in
+                        handleBiometryError(error)
+                        return .just(false)
+                    }
+            }
+            .bind { [unowned self] isBiometrySuccess in
+                userDefaults.setIsBiometryEnabled(isBiometrySuccess)
+                listener?.didSuccessLogin()
+            }
             .disposeOnDeactivate(interactor: self)
     }
 
-    private func handleBiometryError() {
-        print("error")
+    private func handleBiometryError(_ error: Error) {
+        guard let error = error as? BiometryAuthError else {
+            return
+        }
+        switch error {
+        case .canNotEvaluatePolicyOnDevice, .userDismissedFaceIDUse:
+            userDefaults.setIsBiometryEnabled(false)
+        }
     }
 
     private func subscribeOnSignUp() {
         signUpAction
+            .filter { $0 }
+            .withLatestFrom(uiReady)
             .filter { $0 }
             .bind { [unowned self] _ in
                 router?.routeToSignUp()
@@ -109,15 +221,17 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
             .disposeOnDeactivate(interactor: self)
     }
 
-    private func handleError(_ error: Error) {
+    private func handleAuthError(_ error: Error) {
         guard let error = error as? FirebaseAuthenticationServiceError else { return }
         print("error: \(error.localizedDescription)")
     }
 
-
     private let biometryAuthenticationService: BiometryAuthenticationService
     private let firebaseAuthentication: FirebaseAuthenticationService
+    private let keychainService: KeychainService
+    private let userDefaults: UserDefaultsMutableStorage
 
+    private let uiReady = BehaviorRelay<Bool>(value: false)
     private let biometryValue = BehaviorRelay<Bool>(value: false)
     private let signUpAction = BehaviorRelay<Bool>(value: false)
     private let logInAction = BehaviorRelay<LoginCredentialsModel?>(value: nil)
@@ -137,6 +251,10 @@ extension LoggedOutInteractor: LoggedOutViewControllerListener {
     func didTapLogIn(_ model: LoginCredentialsModel) {
         logInAction.accept(model)
     }
+    
+    func viewDidLoad() {
+        uiReady.accept(true)
+    }
 }
 
 // MARK: - SignUpListener
@@ -144,5 +262,9 @@ extension LoggedOutInteractor: LoggedOutViewControllerListener {
 extension LoggedOutInteractor {
     func signUpDidClose() {
         router?.signUpDidClose()
+    }
+
+    func closeSignUp() {
+        router?.closeSignUp()
     }
 }

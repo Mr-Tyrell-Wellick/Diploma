@@ -10,15 +10,17 @@ import RIBs
 final class RootComponent: Component<EmptyDependency> {
     override init(dependency: EmptyDependency) {
         self.userMutableStream = UserMutableStreamImpl()
+        self.keychainService = KeychainServiceImpl()
         super.init(dependency: dependency)
     }
-
+    
     var userMutableStream: UserMutableStream
-
+    var keychainService: KeychainService
+    
 }
 
 extension RootComponent: HomeDependency {
-
+    
 }
 
 extension RootComponent: LoggedOutDependency {

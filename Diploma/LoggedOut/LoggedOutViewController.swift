@@ -15,6 +15,7 @@ protocol LoggedOutViewControllerListener: AnyObject {
     func didTapBiometry()
     func didTapSignUp()
     func didTapLogIn(_ model: LoginCredentialsModel)
+    func viewDidLoad()
 }
 
 final class LoggedOutViewController: UIViewController {
@@ -30,6 +31,7 @@ final class LoggedOutViewController: UIViewController {
         subscribeFaceIDTap()
         subscribeOnSignUpTap()
         subscribeloginButtonTap()
+        listener?.viewDidLoad()
     }
     
     // MARK: - Functions
@@ -65,14 +67,17 @@ final class LoggedOutViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    
-    //TODO: - заменить print на функционал!
     private func subscribeloginButtonTap() {
         loginButton.rx
             .tapGesture()
             .when(.recognized)
-            .bind { _ in
-                print("login button tapped")
+            .bind { [unowned self] _ in
+                listener?.didTapLogIn(
+                    LoginCredentialsModel(
+                        login: loginTextField.text ?? "",
+                        password: passwordTextField.text ?? ""
+                    )
+                )
             }
             .disposed(by: disposeBag)
     }
@@ -245,6 +250,15 @@ extension LoggedOutViewController: LoggedOutPresentable {
         ? loadingIndicator.startAnimating()
         : loadingIndicator.stopAnimating()
     }
+    
+    func fillCredentials(_ credentialModel: KeychainCredentialsModel) {
+        loginTextField.text = credentialModel.login
+        passwordTextField.text = credentialModel.password
+    }
+    
+    func configureBiometryButton(_ isEnabled: Bool) {
+        faceIDImage.isHidden = !isEnabled
+    }
 }
 
 // MARK: - LoggedOutViewControllable
@@ -253,5 +267,9 @@ extension LoggedOutViewController: LoggedOutViewControllable {
     func presentSheet(_ viewController: UIViewController) {
         viewController.modalPresentationStyle = .pageSheet
         present(viewController, animated: true)
+    }
+    
+    func dissmiss() {
+        dismiss(animated: true)
     }
 }

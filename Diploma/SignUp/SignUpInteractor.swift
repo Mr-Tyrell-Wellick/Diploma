@@ -17,7 +17,7 @@ protocol SignUpRouting: ViewableRouting {
     
 }
 
-protocol SignUpPresentable: Presentable {
+protocol SignUpPresentable: Presentable, AlertPresentable {
     func showLoadingIndicator(_ show: Bool)
     
     var listener: SignUpViewControllerListener? { get set }
@@ -25,6 +25,7 @@ protocol SignUpPresentable: Presentable {
 
 protocol SignUpListener: AnyObject {
     func signUpDidClose()
+    func closeSignUp()
 }
 
 final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
@@ -42,6 +43,7 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
     override func didBecomeActive() {
         super.didBecomeActive()
         logActivate()
+        subscribeOnSignUp()
         
     }
     
@@ -51,7 +53,8 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
     }
     
     private func subscribeOnSignUp() {
-        signUpAction.compactMap { $0 }
+        signUpAction
+            .compactMap { $0 }
             .do { [unowned self] _ in
                 presenter.showLoadingIndicator(true)
             }
@@ -78,9 +81,25 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
             .flatMapLatest { [unowned self] _ in
                 firebaseAuthenticationService.sendVerificationEmail()
             }
+        
+        
+        // TODO: - внедрить алерт - пользователь зарегистрировался, вылез алерт о необходимости перейти на почту для прохождения верификации. (разобраться какие алерты добавить)
+        
+        
             .bind { [unowned self] sendResult in
                 presenter.showLoadingIndicator(false)
                 if sendResult {
+                    presenter.showAlert(
+                        AlertViewModel(
+                            title: Strings.alertMailNoteTitle.localized,
+                            message: Strings.alertMailNoteText.localized,
+                            actions: [AlertActionViewModel(
+                                title: "OK",
+                                action: alertOKAction,
+                                style: .standart)
+                                     ]
+                        )
+                    )
                     // TODO: показывать алерт, что отправили письмо на почту
                     print("success email send")
                 } else {
@@ -100,6 +119,7 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
     
     private let firebaseAuthenticationService: FirebaseAuthenticationService
     private let signUpAction = BehaviorRelay<SignUpCredentialsModel?>(value: nil)
+    private let alertOKAction = "OK"
 }
 
 // MARK: - SignUpViewControllerListener
@@ -112,4 +132,14 @@ extension SignUpInteractor: SignUpViewControllerListener {
     func didTapSignUp(_ model: SignUpCredentialsModel) {
         signUpAction.accept(model)
     }
+
+    func didTapAlertAction(_ action: String) {
+        switch action {
+        case alertOKAction:
+            listener?.closeSignUp()
+        default: return
+        }
+    }
+
+
 }

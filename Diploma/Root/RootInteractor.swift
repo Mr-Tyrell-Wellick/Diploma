@@ -8,7 +8,7 @@
 import RIBs
 
 protocol RootRouting: ViewableRouting {
-    //    func routeToHome()
+    func routeToHome()
     func routeToLoggedOut()
 }
 
@@ -19,10 +19,10 @@ protocol RootPresentable: Presentable {
 final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteractable {
     
     weak var router: RootRouting?
-
+    
     init(
         presenter: RootPresentable,
-         userStream: UserStream
+        userStream: UserStream
     ) {
         self.userStream = userStream
         super.init(presenter: presenter)
@@ -32,7 +32,6 @@ final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteract
     override func didBecomeActive() {
         logActivate()
         subscribeOnUser()
-        //            router?.routeToLoggedOut()
     }
     
     override func willResignActive() {
@@ -43,14 +42,10 @@ final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteract
         userStream
             .user
             .bind { [unowned self] user in
-            guard let user else {
+                guard user == nil else { return }
                 router?.routeToLoggedOut()
-                return
             }
-            //TODO: - добавить потом переход на routeToHome
-//                router.routeToHome()
-        }
-        .disposeOnDeactivate(interactor: self)
+            .disposeOnDeactivate(interactor: self)
     }
     
     private var userStream: UserStream
@@ -60,4 +55,12 @@ final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteract
 
 extension RootInteractor: RootViewControllerListener {
     
+}
+
+// MARK: - LoggedOutListener
+
+extension RootInteractor: LoggedOutListener {
+    func didSuccessLogin() {
+        router?.routeToHome()
+    }
 }

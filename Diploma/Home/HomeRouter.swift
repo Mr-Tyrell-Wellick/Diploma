@@ -17,23 +17,22 @@ protocol HomeViewControllable: ViewControllable {
 }
 
 final class HomeRouter: ViewableRouter<HomeInteractable, HomeViewControllable>, HomeRouting {
-
+    
     override init(interactor: HomeInteractable, viewController: HomeViewControllable) {
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
-
-    // TODO: - прописать функционал
-
+    
+    // TODO: - прописать функционал (другая логика внутри функций, не как на остальных экранах)
     func routeToGeneral() {
-
+        
     }
-
+    
     func routeToProfile() {
-
+        
     }
-
+    
     func routeToFavorites() {
-
+        
     }
 }

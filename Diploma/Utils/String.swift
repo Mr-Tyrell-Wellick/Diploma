@@ -16,13 +16,18 @@ enum Strings: String {
     case highLighthedText
     case passwordTextField
     case loginTextField
-    
-    
+    case biometryUsageDescription
+
     // MARK: - SignUp Screen
     
     case signUpButton
     case signUpLabel
-    
+
+    // MARK: - Alerts
+
+    case alertMailNoteTitle
+    case alertMailNoteText
+
     var localized: String {
         self.rawValue.localizedString()
     }

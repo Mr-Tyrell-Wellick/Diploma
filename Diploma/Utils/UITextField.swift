@@ -34,5 +34,6 @@ extension UITextField {
             attributes: placeholderAttributes
         )
         autocapitalizationType = .none
+        autocorrectionType = .no
     }
 }

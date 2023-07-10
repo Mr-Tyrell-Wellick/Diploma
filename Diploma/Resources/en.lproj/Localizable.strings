@@ -18,3 +18,8 @@
 
 "signUpButton" = "Sign up";
 "signUpLabel" = "SIGN UP";
+
+// MARK: - Alerts
+
+"alertMailNoteTitle" = "Confirm your Email";
+"alertMailNoteText" = "To login to the app, go to the link sent to email";

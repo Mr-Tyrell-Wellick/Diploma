@@ -29,9 +29,9 @@ final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, Ro
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
-
+    
     // MARK: - RootRouting
-
+    
     func routeToHome() {
         guard let loggedOut else {
             showHome()
@@ -42,7 +42,7 @@ final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, Ro
             showHome()
         }
     }
-
+    
     func routeToLoggedOut() {
         guard let home else {
             showLoggedOut()
@@ -53,7 +53,7 @@ final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, Ro
             showLoggedOut()
         }
     }
-
+    
     private func showHome() {
         guard home == nil else { return }
         let home = homeBuilder.build()
@@ -61,19 +61,20 @@ final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, Ro
         attachChild(home)
         self.home = home
     }
-
+    
     private func showLoggedOut() {
-        guard loggedOut == nil else { return }
-        let loggedOut = loggedOutBuilder.build()
+        guard loggedOut == nil,
+              let interactor = interactor as? LoggedOutListener else { return }
+        let loggedOut = loggedOutBuilder.build(with: interactor)
         viewController.show(loggedOut.viewControllable.uiviewController)
         attachChild(loggedOut)
         self.loggedOut = loggedOut
     }
-
+    
     // MARK: - Properties
-
+    
     private let homeBuilder: HomeBuildable
-    private weak var home: HomeRouting?
     private let loggedOutBuilder: LoggedOutBuildable
+    private weak var home: HomeRouting?
     private weak var loggedOut: LoggedOutRouting?
 }

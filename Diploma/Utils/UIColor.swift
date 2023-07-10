@@ -56,4 +56,14 @@ UIColor(named: "loggedOutAttributeColor") ?? green
         UIColor(named: "stripColor") ?? .gray
     }
 
+
+    // MARK: - TAbBar
+
+    class var tabBarTintColor: UIColor {
+        UIColor(named: "tabBarTintColor") ?? .black
+    }
+
+    class var shadowTabBarColor: UIColor {
+        UIColor(named: "shadowTabBarColor") ?? .red
+    }
 }
