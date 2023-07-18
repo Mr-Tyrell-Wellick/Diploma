@@ -13,26 +13,63 @@ protocol HomeInteractable: Interactable {
 }
 
 protocol HomeViewControllable: ViewControllable {
-    
+
+    func setChild(_ child: UIViewController)
 }
 
 final class HomeRouter: ViewableRouter<HomeInteractable, HomeViewControllable>, HomeRouting {
-    
-    override init(interactor: HomeInteractable, viewController: HomeViewControllable) {
+
+    init(
+        interactor: HomeInteractable,
+        viewController: HomeViewControllable,
+        mainBuilder: MainBuildable,
+        profileBuilder: ProfileBuildable,
+        favoritesBuilder: FavoritesBuildable
+    ) {
+        self.mainBuilder = mainBuilder
+        self.profileBuilder = profileBuilder
+        self.favoritesBuilder = favoritesBuilder
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
-    
-    // TODO: - прописать функционал (другая логика внутри функций, не как на остальных экранах)
-    func routeToGeneral() {
-        
+
+    func routeToMain() {
+        if main == nil {
+            let main = mainBuilder.build()
+            attachChild(main)
+            self.main = main
+        }
+        let navigationController = UINavigationController(
+            rootViewController: main!.viewControllable.uiviewController
+        )
+        viewController.setChild(navigationController)
     }
-    
+
     func routeToProfile() {
-        
+        if profile == nil {
+            let profile = profileBuilder.build()
+            attachChild(profile)
+            self.profile = profile
+        }
+        viewController.setChild(profile!.viewControllable.uiviewController)
     }
     
     func routeToFavorites() {
-        
+        if favorites == nil {
+            let favorites = favoritesBuilder.build()
+            attachChild(favorites)
+            self.favorites = favorites
+        }
+        viewController.setChild(favorites!.viewControllable.uiviewController)
     }
+
+    // MARK: - Properties
+
+    private let mainBuilder: MainBuildable
+    private let profileBuilder: ProfileBuildable
+    private let favoritesBuilder: FavoritesBuildable
+
+    private weak var main: MainRouting?
+    private weak var profile: ProfileRouting?
+    private weak var favorites: FavoritesRouting?
 }

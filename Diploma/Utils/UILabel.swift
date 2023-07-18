@@ -23,4 +23,3 @@ extension UILabel {
         self.isUserInteractionEnabled = true
     }
 }
-

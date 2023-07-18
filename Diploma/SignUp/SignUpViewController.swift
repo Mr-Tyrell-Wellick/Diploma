@@ -25,7 +25,7 @@ final class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .loggedOutBackgroundColor
+        view.backgroundColor = .allScreenBackgroundColor
         
         addView()
         addConstraints()
@@ -197,8 +197,8 @@ final class SignUpViewController: UIViewController {
     
     private let signUpLabel: UILabel = {
         $0.text = Strings.signUpLabel.localized
-        $0.font = .signUpLabelInSignUpFont
         $0.textColor = .titleColor
+        $0.font = .signUpLabelInSignUpFont
         $0.textAlignment = .center
         return $0
     }(UILabel())

@@ -14,7 +14,7 @@ protocol RootInteractable: Interactable {
 
 protocol RootViewControllable: ViewControllable {
     func show(_ vc: UIViewController)
-    func dismiss(_ completionHandler: () -> ())
+    func dismiss(_ completionHandler: @escaping () -> ())
 }
 
 final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, RootRouting {
@@ -37,7 +37,7 @@ final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, Ro
             showHome()
             return
         }
-        viewController.dismiss {
+        viewController.dismiss { [unowned self] in
             detachChild(loggedOut)
             showHome()
         }
@@ -48,15 +48,16 @@ final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, Ro
             showLoggedOut()
             return
         }
-        viewController.dismiss {
+        viewController.dismiss { [unowned self] in
             detachChild(home)
             showLoggedOut()
         }
     }
     
     private func showHome() {
-        guard home == nil else { return }
-        let home = homeBuilder.build()
+        guard home == nil,
+              let interactor = interactor as? HomeListener else { return }
+        let home = homeBuilder.build(with: interactor)
         viewController.show(home.viewControllable.uiviewController)
         attachChild(home)
         self.home = home

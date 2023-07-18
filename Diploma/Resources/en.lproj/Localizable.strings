@@ -23,3 +23,52 @@
 
 "alertMailNoteTitle" = "Confirm your Email";
 "alertMailNoteText" = "To login to the app, go to the link sent to email";
+
+// MARK: - TabBar
+
+"mainItemName" = "Main";
+"profileItemName" = "Profile";
+"favoritesItemName" = "Favorites";
+
+// MARK: - Profile Screen
+
+"userName" = "Lalo Salamanca";
+"statusTextField" = "Enter text here";
+"statusButton" = "Show status";
+"photoLabel" = "Photos";
+"photoGalleryLabel" = "Photo gallery";
+
+// MARK: - Author name
+
+"friendOne" = "Anna";
+"friendTwo" = "Vlad";
+"friendThree" = "Mike";
+"friendFour" = "Helen";
+"friendFive" = "Mary";
+"friendSix" = "Barbara";
+
+// MARK: - Author post
+
+"friendOneDescription" = "My Bengal cat is a true beauty of nature. He adorns our home with his exotic coat and elegant features. Living with a Bengal cat is a constant marvel at his gracefulness and elegance in movement. Under the same roof with a Bengal cat, I feel a connection to nature and its wild parts that he embodies. Together, we create harmony in the house, where his energy and playfulness blend with my comfort and care. Affectionate and gentle, he becomes my best friend and companion in all of my adventures. Following me everywhere, he displays his loyalty and love that know no bounds. The Bengal cat is an exceptional creature that makes me cherish his presence in my life. In his eyes, I see the fire of passion and the wild freedom that inspire me to be the best version of myself. Our bond is one of understanding and mutual love that grows with each day spent together. The Bengal cat brings indescribable happiness and joy into my life, for which I am infinitely grateful.";
+
+"friendTwoDescription" = "There is no love more sincere and unconditional than the one an owner feels for their dog. The dog becomes the center of their owner's world, embodying loyalty and devotion. To love a dog means to give it one's heart and receive infinite joy and happiness in return. A dog can sense its owner's emotions and be their support in difficult times; it simply knows how to provide comfort. The gaze of a dog is full of love and trust; it never doubts the sincerity of its owner's feelings. A dog is a companion always ready to offer affection and warmth, regardless of the circumstances. The relationship between an owner and a dog fills their lives with meaning and allows them to experience true joy in every moment spent together. The love for a dog teaches us to be more compassionate and caring, expanding the boundaries of our emotional well-being. A dog teaches us to appreciate the simple joys of life and find happiness in small yet significant moments. The owner's love for the dog is an exchange of energy that fills the hearts of both with invisible threads of tenderness and attachment.";
+
+"friendThreeDescription" = "Exciting news! We have bought a new house for the whole family. Now weekends will be wonderful and memorable as parents, children, wife, brother, and his family - everyone will gather together. In our new home, we will create comfort and joy for everyone, spending time together to strengthen bonds and create unforgettable memories. To achieve this, we will organize family events and picnics, with gatherings taking place in the spacious living room and dining area. The children are eagerly exploring the new space and enjoying time with their siblings. My caring wife will create a cozy and comfortable environment for everyone, and my brother and his family will join us for family celebrations. Our new home will become a source of inspiration and growth for each of us. Parents will delight in new possibilities and the cozy ambiance, while the children will revel in the freedom and space provided by the new house. Together, we will share responsibilities and create harmony within the home. Walks and games in the backyard will become a cherished tradition. Evenings by the fireplace will be filled with warmth and family conversations. We will create an atmosphere of love and support around the house, where each person will feel cherished and valued. The children will discover their potential and find entertainment in the new space, and weekends will be filled with family fun and relaxation. Every member of the family actively participates in planning and organizing our weekends, catering to the interests and needs of each individual. We will support one another and cultivate a positive atmosphere, where everyone feels loved and accepted. In our new home, we will strive for harmony and happiness, as it is the place where we grow, develop, and create lasting memories. Our new home symbolizes the strength and well-being of our family, a place that always welcomes love and joy. Here, we will write our story, filled with moments of happiness and family warmth.";
+
+"friendFourDescription" = "Two little twin kittens are my double dose of happiness and cuteness in the house. They are irresistible with their playful eyes and fluffy faces, making me a happy owner every day. The twin kittens have become best friends to each other, always having fun playing and exploring the world together. Their endless energy and adorable antics are a constant source of joy and smiles. I'm so grateful to have these sweet kittens who have brought me infinite happiness and joy. The mutual bond with the twin kittens is filled with tenderness and affection; they're always ready to snuggle up and get cozy. We spend a lot of time together, playing hide-and-seek, chasing a ball, and enjoying every moment spent together. The twin kittens are like little comedic actors, creating funny situations and making me laugh with all my heart. They are so lively and curious, always ready to explore new places and discover new toys. My life has become richer and brighter with the twin kittens by my side, and I'm grateful to them for that.";
+
+"friendFiveDescription" = "A journey on the lake is a unique opportunity to escape the everyday hustle and enjoy the world of nature. The lake serves as an oasis of tranquility, where one can find inner peace and admire the beautiful views. Sailing on the lake allows you to feel freedom and harmony with the surrounding environment, gently touching the water. The stunning nature surrounding the lake offers us unique landscapes and the opportunity to observe diverse animals and plants. The lake's water possesses healing properties, enveloping you in freshness and rejuvenating sensations. A journey on the lake opens up new dimensions of your soul, bringing inspiration and the opportunity to relax. Fishing on the lake is a great way to spend time, enjoying the silence and anticipation of a catch. Romantic walks by the lake create an atmosphere of love and understanding, allowing you to savor shared moments. Sunsets on the lake are true works of art by nature, evoking awe and admiration. The lake possesses a mysterious allure, holding within it secrets and stories that can only be unraveled during the journey.";
+
+"friendSixDescription" = "Dolphins are the intellectual geniuses of the seas, possessing incredible abilities and social skills. Studying dolphins allows us to uncover the secrets of their complex communication and unique culture. Dolphins have astonishing memory and problem-solving abilities, making them one of the smartest animals on Earth. Their skills in learning and cooperation give us a better understanding of the nature of intelligence and sociability. Dolphins show care for their fellow individuals and have the capacity for empathy, making them exemplars of emotional intelligence. Interacting with dolphins can be a source of mutual well-being, improving our physical and mental health. Their graceful leaps and playful behavior bring joy and delight to those observing them. Dolphins symbolize freedom and harmony with the environment, reminding us of the importance of preserving marine ecosystems. Studying dolphins helps us develop new technologies and approaches inspired by their abilities and natural adaptations. The fascinating world of dolphins offers us endless opportunities for discoveries and amazing findings.";
+
+// MARK: - Main Screen
+
+"MainNavigationItem" = "Main";
+
+// TODO: - ДОДЕЛАТЬ!
+
+// MARK: - My post
+
+"myPostOne" = "";
+"myPostTwo" = "";
+"myPostThree" = "";

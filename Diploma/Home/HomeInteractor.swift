@@ -17,7 +17,7 @@ struct TabBarItemViewModel {
 }
 
 protocol HomeRouting: ViewableRouting {
-    func routeToGeneral()
+    func routeToMain()
     func routeToProfile()
     func routeToFavorites()
 }
@@ -28,9 +28,14 @@ protocol HomePresentable: Presentable {
     func setupTabBarItems(_ viewModel: [TabBarItemViewModel])
 }
 
+protocol HomeListener: AnyObject {
+    func closeHome()
+}
+
 final class HomeInteractor: PresentableInteractor<HomePresentable>, HomeInteractable {
     
     weak var router: HomeRouting?
+    weak var listener: HomeListener? 
     
     override init(presenter: HomePresentable) {
         super.init(presenter: presenter)
@@ -44,26 +49,26 @@ final class HomeInteractor: PresentableInteractor<HomePresentable>, HomeInteract
     
     override func willResignActive() {
         logDeactivate()
-        
     }
     
     private func subscribeOnUiReady() {
         uiReady.filter { $0 }
             .bind { [unowned self] _ in
+                router?.routeToMain()
                 presenter.setupTabBarItems(
                     [
                         TabBarItemViewModel(
-                            name: "General",
+                            name: Strings.mainItemName.localized,
                             image: .homeTabBarImage,
                             tag: 0
                         ),
                         TabBarItemViewModel(
-                            name: "Profile",
+                            name: Strings.profileItemName.localized,
                             image: .profileTabBarImage,
                             tag: 1
                         ),
                         TabBarItemViewModel(
-                            name: "Favorites",
+                            name: Strings.favoritesItemName.localized,
                             image: .favoritesTabBarImage,
                             tag: 2
                         )
@@ -79,18 +84,19 @@ final class HomeInteractor: PresentableInteractor<HomePresentable>, HomeInteract
 // MARK: - HomeViewControllerListener
 
 extension HomeInteractor: HomeViewContollerListener {
-    func didTapOnButton(/*_ type: HomeTabBarButtonType*/) {
-        //        switch type {
-        //        case .general:
-        //            router?.routeToGeneral()
-        //        case .favorites:
-        //            router?.routeToFavorites()
-        //        case .profile:
-        //            router?.routeToProfile()
-        //        }
+    func didTapOnButton(_ type: TabBarButtonType) {
+                switch type {
+                case .main:
+                    router?.routeToMain()
+                case .profile:
+                    router?.routeToProfile()
+                case .favorites:
+                    router?.routeToFavorites()
+                }
     }
     
     func didLoad() {
         uiReady.accept(true)
     }
 }
+

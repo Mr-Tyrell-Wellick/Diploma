@@ -25,7 +25,7 @@ final class LoggedOutViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .loggedOutBackgroundColor
+        view.backgroundColor = .allScreenBackgroundColor
         addView()
         addConstraints()
         subscribeFaceIDTap()

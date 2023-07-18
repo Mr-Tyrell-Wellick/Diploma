@@ -31,7 +31,7 @@ extension RootViewController: RootViewControllable {
         presentViewControllerFullScreen(viewController: vc)
     }
     
-    func dismiss(_ completionHandler: () -> ()) {
+    func dismiss(_ completionHandler: @escaping () -> ()) {
         dismiss(animated: true)
         completionHandler()
     }

@@ -18,18 +18,18 @@ protocol UserMutableStream: UserStream {
 }
 
 final class UserMutableStreamImpl: UserMutableStream {
-
+    
     func updateUser(_ user: User) {
         userVariable.accept(user)
     }
-
+    
     func clearUser() {
         userVariable.accept(nil)
     }
-
+    
     var user: Observable<User?> {
         userVariable.asObservable()
     }
-
+    
     private var userVariable = BehaviorRelay<User?>(value: nil)
 }

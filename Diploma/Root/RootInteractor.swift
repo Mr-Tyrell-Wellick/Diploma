@@ -64,3 +64,12 @@ extension RootInteractor: LoggedOutListener {
         router?.routeToHome()
     }
 }
+
+// MARK: - HomeListener
+
+extension RootInteractor: HomeListener {
+
+    func closeHome() {
+        router?.routeToLoggedOut()
+    }
+}

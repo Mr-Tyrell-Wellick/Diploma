@@ -66,7 +66,6 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
         logDeactivate()
     }
 
-    // TODO: - проверить, почему вылазит ошибка!!!!!!
     private func subscribeOnUiReady() {
         uiReady
             .filter { $0 }
@@ -185,6 +184,7 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
                     print("not success auth")
                 }
             }
+            .filter { $0 }
             .flatMapLatest { [unowned self] _ in
                 biometryAuthenticationService
                     .authorize()

@@ -8,6 +8,12 @@
 import UIKit
 
 extension UIView {
+
+    class var identifier: String {
+        String(describing: type(of: self))
+
+    }
+
     func setBottomBorder(
         offset: CGFloat = 2,
         color: UIColor,

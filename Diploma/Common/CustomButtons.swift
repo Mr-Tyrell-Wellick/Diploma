@@ -9,6 +9,7 @@ import UIKit
 
 enum CustomButtonType {
     case defaultButton(title: String, titleColor: UIColor, backgroundColor: UIColor)
+    case imageButton(imageButton: UIImage)
 }
 
 extension UIButton {
@@ -20,6 +21,9 @@ extension UIButton {
             setTitleColor(titleColor, for: .normal)
             self.backgroundColor = backgroundColor
             setupConfig()
+        case .imageButton(let imageButton):
+            setImage(imageButton, for: .normal)
+
         }
     }
 

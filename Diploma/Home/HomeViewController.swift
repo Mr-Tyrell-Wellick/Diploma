@@ -10,12 +10,14 @@ import UIKit
 import TinyConstraints
 import RxSwift
 
-
-//enum ButtonType (прописать здесь)
-
+enum TabBarButtonType {
+    case main
+    case profile
+    case favorites
+}
 
 protocol HomeViewContollerListener: AnyObject {
-    func didTapOnButton(/*_ type: HomeTabBarButtonType*/)
+    func didTapOnButton(_ type: TabBarButtonType)
     func didLoad()
 }
 
@@ -27,11 +29,17 @@ final class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .loggedOutBackgroundColor
+        view.backgroundColor = .allScreenBackgroundColor
         addView()
         addConstraints()
         listener?.didLoad()
     }
+
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -51,6 +59,15 @@ final class HomeViewController: UIViewController {
         tabBar.height(Constants.TAbBar.heightOffset)
     }
 
+    private func setupChildConstraints() {
+
+        
+        child?.view.topToSuperview()
+        child?.view.leadingToSuperview()
+        child?.view.trailingToSuperview()
+        child?.view.bottomToTop(of: tabBar)
+    }
+
     private enum Constants {
         enum TAbBar {
             static let heightOffset: CGFloat = 49
@@ -60,17 +77,35 @@ final class HomeViewController: UIViewController {
     // MARK: - Properties
     
     private lazy var tabBar: UITabBar = {
-
-        // TODO: - создать в UIColor цветовую гамму
         $0.backgroundColor = .gray
         $0.layer.shadowColor = UIColor.shadowTabBarColor.cgColor
         $0.layer.shadowOffset = CGSize(width: 0, height: -2)
         $0.layer.shadowRadius = 1
         $0.layer.shadowOpacity = 0.5
+        $0.delegate = self
         return $0
     }(UITabBar())
 
     private let disposeBag = DisposeBag()
+    private weak var child: UIViewController?
+
+}
+
+
+// MARK: - UITabBarDelegate
+
+extension HomeViewController: UITabBarDelegate {
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        switch item.tag {
+        case 0:
+            listener?.didTapOnButton(.main)
+        case 1:
+            listener?.didTapOnButton(.profile)
+        case 2:
+            listener?.didTapOnButton(.favorites)
+        default: return
+        }
+    }
 }
 
 // MARK: - HomePresentable
@@ -94,5 +129,12 @@ extension HomeViewController: HomePresentable {
 
 extension HomeViewController: HomeViewControllable {
 
-    // TODO: - перепечатать функцию для child Set Child
+    func setChild(_ child: UIViewController) {
+        self.child?.removeChildFromParent()
+        self.child = child
+        addChild(child)
+        view.insertSubview(child.view, at: 0)
+        setupChildConstraints()
+        child.didMove(toParent: self)
+    }
 }
