@@ -30,17 +30,14 @@ class MainFriendsView: UIView, MainFriendsViewPresentable {
     
     private func addView() {
         addSubview(horizontalCollectionView)
-        
     }
     
     private func addConstraints() {
-        
         horizontalCollectionView.edgesToSuperview()
     }
     
     // MARK: - Properties
-    
-    
+
     // Horizontal layout
     private lazy var horizontalLayout: UICollectionViewLayout = {
         $0.scrollDirection = .horizontal
@@ -63,16 +60,16 @@ class MainFriendsView: UIView, MainFriendsViewPresentable {
     }(UICollectionView(frame: frame, collectionViewLayout: self.horizontalLayout))
 }
 
-
 // MARK: - UICollectionViewDataSource
 
 extension MainFriendsView: UICollectionViewDataSource {
     
-    
     func collectionView(
         _ collectionView: UICollectionView, numberOfItemsInSection section: Int
     ) -> Int {
-        return posts.count
+        // TODO: - исправить!
+        //        return posts.count
+        return 0
     }
     
     func collectionView(
@@ -88,8 +85,10 @@ extension MainFriendsView: UICollectionViewDataSource {
             )
         }
         cell.setup()
-        let post = posts[indexPath.item]
-        cell.configure(with: post.avatarImage)
+        // TODO: - исправить!
+//        cell.configure(with: authorViewModel[indexPath.row])
+        //        let post = posts[indexPath.item]
+        //        cell.configure(with: post.avatarImage)
         return cell
     }
 }

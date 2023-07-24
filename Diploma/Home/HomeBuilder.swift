@@ -12,6 +12,29 @@ protocol HomeDependency: EmptyDependency {
 }
 
 final class HomeComponent: Component<EmptyDependency> {
+    override init(dependency: EmptyDependency) {
+        let friendsPostsStream = PostsStreamImpl()
+        self.friendsPostsStream = friendsPostsStream
+        
+        let myPostsStream = PostsStreamImpl()
+        self.myPostsStream = myPostsStream
+
+        let favoritesPostsStream = PostsStreamImpl()
+        self.favoritesPostsStream = favoritesPostsStream
+
+        postsService = PostsServiceImpl(
+            friendsPostsStream: friendsPostsStream,
+            myPostsStream: myPostsStream,
+            favoritesPostsStream: favoritesPostsStream
+        )
+
+        super.init(dependency: dependency)
+    }
+
+    var postsService: PostsService
+    var friendsPostsStream: PostsStream
+    var myPostsStream: PostsStream
+    var favoritesPostsStream: PostsStream
 
 }
 

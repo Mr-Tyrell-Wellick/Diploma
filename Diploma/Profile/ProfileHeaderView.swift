@@ -10,62 +10,76 @@ import TinyConstraints
 import RxSwift
 import RxGesture
 
-class ProfileHeaderView: UICollectionReusableView {
+protocol ProfileHeaderViewListener: AnyObject {
 
-    // TODO: - может здесь что-то будет еще добавлено!
+}
 
+protocol ProfileHeaderViewPresentable: UITableViewHeaderFooterView {
+
+}
+
+class ProfileHeaderView: UITableViewHeaderFooterView, ProfileHeaderViewPresentable {
 
     // MARK: - Init
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
+    convenience init() {
+        self.init(frame: .zero)
         addView()
         addConstraints()
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-
     // MARK: - Functions
 
-    private func addView() {
-        addSubview(userName)
-        addSubview(statusLabel)
-        addSubview(statusTextField)
-        addSubview(statusButton)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        setupBorders()
     }
+
+    private func setupBorders() {
+        avatar.layer.borderColor = UIColor.borderUserColor.cgColor
+        statusTextField.layer.borderColor = UIColor.borderUserColor.cgColor
+    }
+
+    private func addView() {
+        contentView.addSubview(avatar)
+        contentView.addSubview(userName)
+        contentView.addSubview(statusLabel)
+        contentView.addSubview(statusTextField)
+        contentView.addSubview(statusButton)
+    }
+
+    //    private func subscribeOnStatusButtonTap() {
+    //        statusButton.rx
+    //            .tapGesture()
+    //            .when(.recognized)
+    //            .bind { [unowned self] _ in
+    //                listener.
+    //            }
 
     private func addConstraints() {
 
-
-        avatar.top(to: self, offset: Constants.Avatar.topOffset)
-        avatar.leading(to: self, offset: Constants.Avatar.leadingOffset)
+        avatar.topToSuperview(offset: Constants.Avatar.topToSuperViewOffset)
+        avatar.leadingToSuperview(offset: Constants.Avatar.leadingToSuperViewOffset)
         avatar.width(Constants.Avatar.withAndHeightOffset)
         avatar.height(Constants.Avatar.withAndHeightOffset)
 
-        userName.top(to: self, offset: Constants.UserName.topOffset)
-        userName.leading(to: self, offset: Constants.UserName.leadingOffset)
+        userName.top(to: avatar, offset: Constants.UserName.topOffset)
+        userName.leading(to: avatar, offset: Constants.UserName.leadingOffset)
 
+        statusLabel.topToBottom(of: userName, offset: Constants.StatusLabel.topToBotomOffset)
+        statusLabel.leading(to: userName)
 
-        statusLabel.top(to: self, offset: Constants.StatusLabel.topOffset)
-        statusLabel.leading(to: self, offset: Constants.StatusLabel.leadingOffset)
+        statusTextField.topToSuperview(offset: Constants.StatusTextField.topToSuperViewOffset)
+        statusTextField.leadingToSuperview(offset: Constants.StatusTextField.leadingToSuperViewOffset)
+        statusTextField.trailing(to: statusButton)
+        statusTextField.height(Constants.StatusTextField.heightOffset)
 
-        statusTextField.top(to: self, offset: Constants.StatusTextField.topOffset)
-        statusTextField.leading(to: self, offset: Constants.StatusTextField.leadingOffset)
-        statusTextField.trailing(to: self, offset: Constants.StatusTextField.trailingOffset)
-
-
-        statusButton.top(to: self, offset: Constants.StatusButton.topOffset)
-        statusButton.leading(to: self, offset: Constants.StatusButton.leadingOffset)
-        statusButton.trailing(to: self, offset: Constants.StatusButton.trailingOffset)
+        statusButton.topToSuperview(offset: Constants.StatusButton.topToSuperViewOffset)
+        statusButton.leadingToSuperview(offset: Constants.StatusButton.leadingAndTrailingOffset)
+        statusButton.trailingToSuperview(offset: Constants.StatusButton.leadingAndTrailingOffset)
         statusButton.width(Constants.StatusButton.widthOffset)
         statusButton.height(Constants.StatusButton.heightOffset)
-
-        // TODO: - разобраться, он здесь будет нужен или нет
-        //        self.bottom(to: statusButton, offset: 30)
+        statusButton.bottomToSuperview(offset: Constants.StatusButton.bottomToSuperViewOffset)
     }
 
     // MARK: - Enum
@@ -73,59 +87,58 @@ class ProfileHeaderView: UICollectionReusableView {
     private enum Constants {
 
         enum Avatar {
-            static let topOffset: CGFloat = 16
+            static let topToSuperViewOffset: CGFloat = 16
+            static let leadingToSuperViewOffset: CGFloat = 16
             static let withAndHeightOffset: CGFloat = 100
-            static let leadingOffset: CGFloat = 16
         }
 
         enum UserName {
-            static let topOffset: CGFloat = 27
-            static let leadingOffset: CGFloat = 140
+            static let topOffset: CGFloat = 10
+            static let leadingOffset: CGFloat = 130
         }
 
         enum StatusLabel {
-            static let topOffset: CGFloat = 54
-            static let leadingOffset: CGFloat = 140
+            static let topToBotomOffset: CGFloat = 5
         }
 
-        // TODO: - до конца разобраться с привязкой лево/право
         enum StatusTextField {
-            static let topOffset: CGFloat = 80
-            static let leadingOffset: CGFloat = 140
-            static let trailingOffset: CGFloat = -16
+            static let topToSuperViewOffset: CGFloat = 80
+            static let leadingToSuperViewOffset: CGFloat = 140
+            static let heightOffset:CGFloat = 40
         }
 
         enum StatusButton {
-            static let topOffset: CGFloat = 132
-            static let leadingOffset: CGFloat = 16
-            static let trailingOffset: CGFloat = 16
+            static let topToSuperViewOffset: CGFloat = 132
+            static let leadingAndTrailingOffset: CGFloat = 35
             static let widthOffset: CGFloat = 340
             static let heightOffset: CGFloat = 50
-
+            static let bottomToSuperViewOffset: CGFloat = -30
         }
     }
 
     // MARK: - Properties
 
     private lazy var avatar: UIImageView = {
-        $0.setupAvatar(userImage: .avatarImage)
+        $0.image = .avatarImage
+        $0.layer.borderColor = UIColor.borderUserColor.cgColor
+        $0.layer.cornerRadius = 50
+        $0.layer.masksToBounds = true
+        $0.layer.borderWidth = 3
+        $0.isUserInteractionEnabled = true
         return $0
     }(UIImageView())
 
     // User name
     private let userName: UILabel = {
-
         $0.text = Strings.userName.localized
         $0.textColor = .titleColor
         $0.font = .fullNameFont
         return $0
     }(UILabel())
 
-    // TODO: - надо ли text заменить на локализованный или нет?
-
     // Status
     private let statusLabel: UILabel = {
-
+        $0.text = "Busy"
         $0.textColor = .titleColor
         $0.font = .statusFont
         return $0
@@ -137,6 +150,18 @@ class ProfileHeaderView: UICollectionReusableView {
             placeholder: Strings.statusTextField.localized,
             textColor: .titleColor
         )
+        $0.backgroundColor = .allScreenBackgroundColor
+        $0.layer.cornerRadius = 12
+        $0.layer.borderWidth = 0.5
+        $0.leftView = UIView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: 10,
+                height: $0.frame.height
+            )
+        )
+        $0.leftViewMode = .always
         return $0
     }(UITextField())
 
@@ -152,6 +177,3 @@ class ProfileHeaderView: UICollectionReusableView {
         return $0
     }(UIButton())
 }
-
-
-// TODO: - разобраться с tap'ом на аватарку, чтобы она открывалась 

@@ -13,12 +13,12 @@ protocol HomeInteractable: Interactable {
 }
 
 protocol HomeViewControllable: ViewControllable {
-
+    
     func setChild(_ child: UIViewController)
 }
 
 final class HomeRouter: ViewableRouter<HomeInteractable, HomeViewControllable>, HomeRouting {
-
+    
     init(
         interactor: HomeInteractable,
         viewController: HomeViewControllable,
@@ -32,19 +32,21 @@ final class HomeRouter: ViewableRouter<HomeInteractable, HomeViewControllable>, 
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
-
+    
     func routeToMain() {
         if main == nil {
             let main = mainBuilder.build()
             attachChild(main)
             self.main = main
         }
-        let navigationController = UINavigationController(
-            rootViewController: main!.viewControllable.uiviewController
-        )
-        viewController.setChild(navigationController)
+        if mainNavigationController == nil {
+            mainNavigationController = UINavigationController(
+                rootViewController: main!.viewControllable.uiviewController
+            )
+        }
+        viewController.setChild(mainNavigationController!)
     }
-
+    
     func routeToProfile() {
         if profile == nil {
             let profile = profileBuilder.build()
@@ -60,15 +62,23 @@ final class HomeRouter: ViewableRouter<HomeInteractable, HomeViewControllable>, 
             attachChild(favorites)
             self.favorites = favorites
         }
-        viewController.setChild(favorites!.viewControllable.uiviewController)
+        if favoritesNavigationController == nil {
+            favoritesNavigationController = UINavigationController(
+                rootViewController: favorites!.viewControllable.uiviewController
+            )
+        }
+        viewController.setChild(favoritesNavigationController!)
     }
-
+    
     // MARK: - Properties
-
+    
+    private var favoritesNavigationController: UINavigationController?
+    private var mainNavigationController: UINavigationController?
+    
     private let mainBuilder: MainBuildable
     private let profileBuilder: ProfileBuildable
     private let favoritesBuilder: FavoritesBuildable
-
+    
     private weak var main: MainRouting?
     private weak var profile: ProfileRouting?
     private weak var favorites: FavoritesRouting?

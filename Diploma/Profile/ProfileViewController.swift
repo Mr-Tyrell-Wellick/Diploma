@@ -12,7 +12,7 @@ import RxSwift
 import RxGesture
 
 protocol ProfileViewContollerListener: AnyObject {
-    
+    func viewDidLoad()
 }
 
 final class ProfileViewController: UIViewController {
@@ -23,228 +23,110 @@ final class ProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .blue
         addView()
         addConstraints()
-
+        listener?.viewDidLoad()
     }
-
-    // TODO: - НАПИСАТЬ!
 
     // MARK: - Functions
 
     private func addView() {
-
-
-
+        view.addSubview(tableView)
     }
-
 
     private func addConstraints() {
-
+        tableView.edgesToSuperview(usingSafeArea: true)
     }
-
-
-    // MARK: - Enums
-
-    private enum Constants {
-
-
-    }
-
-
-    // TODO: - (HEADERVIEW) набросок
-
-//    // MARK: - Properties
-//
-//    // User name
-//    private let userName: UILabel = {
-//        $0.setupLabel(
-//            text: Strings.userName.localized,
-//            textColor: .titleColor,
-//            font: .fullNameFont
-//        )
-//        return $0
-//    }(UILabel())
-//
-//    // Status
-//    private let statusLabel: UILabel = {
-//        $0.setupLabel(
-//            text: "Be nice",
-//            textColor: .titleColor,
-//            font: .statusFont
-//        )
-//        return $0
-//    }(UILabel())
-//
-//    // Status Text Field
-//    private let statusTextField: UITextField = {
-//        $0.setupTextFieldAndAttributes(
-//            placeholder: Strings.statusTextField.localized,
-//            textColor: .titleColor
-//        )
-//        return $0
-//    }(UITextField())
-//
-//    // Status button
-//    private let statusButton: UIButton = {
-//        $0.setupButton(
-//            CustomButtonType.defaultButton(
-//                title: Strings.statusButton.localized,
-//                titleColor: .buttonColor,
-//                backgroundColor: .buttonBackgroundColor
-//            )
-//        )
-//        return $0
-//    }(UIButton())
-
-
-    // TODO: - (PHOTOVIEWCELL) - набросок
 
     // MARK: - Properties
 
-    // photo header
-    private let photoLabel: UILabel = {
-        $0.text = Strings.photoLabel.localized
-        $0.textColor = .titleColor
-        $0.font = .photoHeaderFont
+    private lazy var tableView: UITableView = {
+        $0.backgroundColor = .allScreenBackgroundColor
+        $0.dataSource = self
+        $0.delegate = self
+        $0.sectionHeaderHeight = UITableView.automaticDimension
+        $0.sectionFooterHeight = 0
+        $0.rowHeight = UITableView.automaticDimension
+        $0.showsVerticalScrollIndicator = false
+        $0.registerCell(PostTableViewCell.self)
+        $0.registerCell(UITableViewCell.self)
         return $0
-    }(UILabel())
+    }(UITableView(frame: .zero, style: .grouped))
 
+    private lazy var profileHeaderView: ProfileHeaderViewPresentable = {
+        $0
+    }(ProfileHeaderView())
 
-    // arrow (стрелка сверху справа)
-    private lazy var arrowImage: UIImageView = {
-        $0.image = .arrowImage
-        return $0
-    }(UIImageView())
-
-
-    // TODO: - (САМА ФОТОГАЛЕРЕЯ)!
-    //    self.navigationItem.title = Strings.photoGalleryLabel.localized
-
-
-    // TODO: - (POSTTABLEVIEWCELL) - набросок. (заголовок, фото чувака - заглушка)
-
-
-    private lazy var author: UILabel = {
-
-        $0.text = Strings.friendOne.localized
-        $0.textColor = .titleColor
-        $0.font = .authorHeaderFont
-        return $0
-    }(UILabel())
-
-    // круглая аватарка, которая будет отображаться левее от имени пользователя в header'e
-    private lazy var authorImage: UIImageView = {
-        $0.image = .friendOneImage
-        return $0
-    }(UIImageView())
-
-
-    // Post Image
-    private lazy var postImage: UIImageView = {
-        $0.image = .dogImage
-        return $0
-    }(UIImageView())
-
-
-    // сам пост
-    private lazy var descriptionText: UILabel = {
-
-        $0.text = "Какой-то текст"
-        $0.textColor = .titleColor
-        $0.font = .descriptionTextFont
-        return $0
-    }(UILabel())
-
-    // просмотры
-    private lazy var userViews: UILabel = {
-        $0.text = "Views: 300"
-        $0.textColor = .titleColor
-        $0.font = .viewsFont
-        return $0
-    }(UILabel())
-    
-
-    // TODO: - посмотреть проект Тимура, где он реализовал через сердечко
-    // Likes (хочу сделать кнопкой с анимацией, и если получится прикрутить цифры
-    private lazy var favoriteButton: UIButton = {
-        $0.setupButton(CustomButtonType.imageButton(imageButton: .heartImage))
-        return $0
-    }(UIButton())
-
-    // TODO: - в проекте Тимура, переделать под rxSwift
-    //    @objc private func didTapFavoriteButton() {
-    //        let imageName = self.viewModel?.isFavorite == false
-    //        ? "heart.circle.fill"
-    //        : "heart.circle" // "suit.heart"
-    //        UIView.animate(withDuration: 0.2) {
-    //            self.favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
-    //            self.favoriteButton.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-    //        } completion: { _ in
-    //            guard var newViewModel = self.viewModel else { return }
-    //
-    //            UIView.animate(withDuration: 0.2) {
-    //                self.favoriteButton.transform = .identity
-    //            } completion: { _ in
-    //                newViewModel.isFavorite.toggle()
-    //                self.viewModel = newViewModel
-    //                self.delegate?.wasLikedArticle(with: newViewModel.url)
-    //            }
-    //        }
-    //    }
-    //    private func favoriteButtonConstraints() -> [NSLayoutConstraint] {
-    //        let topAnchor = self.favoriteButton.topAnchor.constraint(equalTo: self.stackView.bottomAnchor, constant: 10)
-    //        let rightAnchor = self.favoriteButton.rightAnchor.constraint(equalTo: self.stackView.rightAnchor)
-    //        let heightAnchor = self.favoriteButton.heightAnchor.constraint(equalToConstant: 20)
-    //        let widthAnchor = self.favoriteButton.widthAnchor.constraint(equalToConstant: 20)
-    //        let bottomAnchor = self.favoriteButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10)
-    //
-    //        return [
-    //            topAnchor, rightAnchor, heightAnchor, widthAnchor, bottomAnchor
-    //        ]
-    //    }
-
-
-
-    //}
-
-    //extension ArticleTableViewCell: Setupable {
-    //
-    //    func setup(with viewModel: ViewModelProtocol) {
-    //        guard let viewModel = viewModel as? ViewModel else { return }
-    //
-    //        self.viewModel = viewModel
-    //
-    //        self.titleLabel.text = viewModel.title == .empty
-    //        ? "Untitled"
-    //        : viewModel.title
-    //        self.descriptionLabel.text = viewModel.description
-    //        self.publishedDateLabel.text = viewModel.publishedAt
-    //        let imageName = self.viewModel?.isFavorite == false
-    //        ? "heart.circle" // "suit.heart"
-    //        : "heart.circle.fill"
-    //        self.favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
-    //
-    //        if self.descriptionLabel.text == .empty {
-    //            self.descriptionLabel.isHidden = true
-    //        }
-    //    }
-    //}
+    private var postsViewModel: [PostViewModel] = []
 }
 
+// MARK: - UITableViewDelegate
 
+extension ProfileViewController: UITableViewDelegate {
+    
+    // TODO: - доделать (вписать header, который будет создан
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            return profileHeaderView
+        } else {
+            return nil
+        }
+    }
+}
 
+// MARK: - UITableViewDataSource
 
+extension ProfileViewController: UITableViewDataSource {
 
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        }
+        if section == 1 {
+            return postsViewModel.count
+        }
+        return 0
+    }
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
 
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return UITableView.automaticDimension
+        }
+        return UITableView.automaticDimension
+    }
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            return PhotoTableViewCell()
+        } else if indexPath.section == 1 {
+            let cell = tableView.dequeuCell(PostTableViewCell.self, indexPath: indexPath)
+            cell.setupMyPosts(with: postsViewModel[indexPath.row])
+            return cell
+        } else {
+            let cell = tableView.dequeuCell(UITableViewCell.self, indexPath: indexPath)
+            return cell
+        }
+    }
+
+    // Remove cell light when clicking on the post
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        false
+    }
+}
+
+// MARK: - Properties
 
 // MARK: - ProfilePresentable
 
 extension ProfileViewController: ProfilePresentable {
-    
+    func showPosts(_ viewModel: [PostViewModel]) {
+        postsViewModel = viewModel
+        tableView.reloadData()
+    }
 }
 
 // MARK: - ProfileControllable

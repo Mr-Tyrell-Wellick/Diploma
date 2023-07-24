@@ -36,7 +36,6 @@
 "statusTextField" = "Enter text here";
 "statusButton" = "Show status";
 "photoLabel" = "Photos";
-"photoGalleryLabel" = "Photo gallery";
 
 // MARK: - Author name
 
@@ -65,10 +64,21 @@
 
 "MainNavigationItem" = "Main";
 
-// TODO: - ДОДЕЛАТЬ!
-
 // MARK: - My post
 
-"myPostOne" = "";
-"myPostTwo" = "";
-"myPostThree" = "";
+"myPostOne" = "Morning energy is my secret weapon☀️💪! Every morning, I kickstart my day with cardio workouts to charge myself with positivity and strength for the entire day🏋️‍♀️💨! The first thing I do is jump with a skipping rope🚀! It's a fantastic way to warm up and get the blood flowing. Jumping is my little dose of joy😃! Next, I move on to ab exercises💪🔥. I can feel every core muscle engaging and becoming stronger💥. Cardio workouts are not just physical exercises; they are also a way to awaken my mind🧠! During my morning workouts, I tune my mindset to success and positive thinking🌟. Every day, I set new goals for myself and strive to surpass them💯! During workouts, I've learned to be resilient, and it reflects in my life. Each time I overcome fatigue and laziness, I know I'm becoming better🚀💪! Morning cardio workouts are my personal catalyst for growth and development🌱. Workouts instill discipline and self-control in me💫. I know that every step brings me closer to my target🎯. When I finish my morning exercises, I feel refreshed and full of energy☀️! It's like a fresh start to each day that I eagerly anticipate🌄. Morning cardio workouts are not just about staying in shape; they are my way of life🏃‍♀️💕! I firmly believe that taking care of my body is an act of self-love. Discipline and self-discipline are my faithful companions on this journey towards a healthy and strong version of myself💪🌟! Morning workouts - it's our secret to success🗝️😉!";
+"myPostTwo" = "Just came back from the movies, and I absolutely loved the film 'Joker' starring Joaquin Phoenix🎬😍! 'Joker' is a masterpiece of storytelling and powerful acting that left me speechless🤩🎭. Joaquin Phoenix's performance was simply phenomenal, bringing depth and emotion to the character like never before👏🔥. The film's dark and gripping narrative kept me on the edge of my seat throughout the entire journey🎥🔥. 'Joker' explores the complexities of the human psyche, leaving a lasting impact on the audience🤯💔. It's rare to come across such thought-provoking and intense films that stay with you long after the credits roll🎞️💭. Kudos to the director and the entire cast for creating a cinematic experience that's truly unforgettable🙌🎬. If you haven't seen 'Joker' yet, do yourself a favor and go watch it - you won't be disappointed🤩🍿! This film reaffirms why I love going to the movies - to be transported to another world and experience raw emotions🌟🎞️. 'Joker' is a tour de force of filmmaking, and I can't wait to discuss it with fellow movie enthusiasts🗣️🎭!";
+"myPostThree" = "How wonderful it is to spend time in the forest, riding a bicycle🚴🌳! Forest trails and green trees create the perfect atmosphere for thrilling adventures🌲🌿. It's an indescribable feeling of freedom that fills me with emotions. Biking in the forest is not just a sport, but a way to immerse myself in nature and recharge with energy🌳💪. I find tranquility in this. In the forest, I forget about everyday worries. Every kilometer of the journey conquered is pure pleasure and satisfaction🚲🏞️. All the stresses vanish, leaving behind serenity and harmony with the surrounding world😇. The forest and the bicycle are my perfect duo for a complete relaxation and exciting escapades🚴🌳!";
+
+"myHeaderPostOne" = "Morning Training";
+"myHeaderPostTwo" = "Cinema";
+"myHeaderPostThree" = "Bike Ride";
+
+// MARK: - Favorite screen
+
+"favoritesNavigationItem" = "Favorites";
+
+
+// MARK: - Photo Screen
+
+"photoGalleryLabel" = "Photo gallery";

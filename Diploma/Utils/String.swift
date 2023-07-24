@@ -62,13 +62,20 @@ enum Strings: String {
     
     // MARK: - Main Screen
     
-    case MainNavigationItem
+    case mainNavigationItem
     
     // MARK: - My post
     
     case myPostOne
     case myPostTwo
     case myPostThree
+    case myHeaderPostOne
+    case myHeaderPostTwo
+    case myHeaderPostThree
+
+    // MARK: - Favorite screen
+
+    case favoritesNavigationItem
     
     var localized: String {
         self.rawValue.localizedString()

@@ -12,7 +12,7 @@ import RxSwift
 import RxGesture
 
 protocol MainViewControllerListener: AnyObject {
-    
+    func viewDidLoad()
 }
 
 final class MainViewController: UIViewController {
@@ -26,6 +26,7 @@ final class MainViewController: UIViewController {
         setupNavigationBar(Strings.mainItemName.localized)
         addView()
         addConstraints()
+        listener?.viewDidLoad()
     }
     
     // MARK: - Functions
@@ -37,7 +38,7 @@ final class MainViewController: UIViewController {
     private func addConstraints() {
         tableView.edgesToSuperview()
     }
-    
+
     // MARK: - Properties
     
     private lazy var tableView: UITableView = {
@@ -47,6 +48,7 @@ final class MainViewController: UIViewController {
         $0.sectionHeaderHeight = UITableView.automaticDimension
         $0.sectionFooterHeight = 0
         $0.rowHeight = UITableView.automaticDimension
+        $0.showsVerticalScrollIndicator = false
         $0.registerCell(AuthorPostTableCell.self)
         return $0
     }(UITableView(frame: .zero, style: .grouped))
@@ -54,7 +56,8 @@ final class MainViewController: UIViewController {
     private lazy var friendsView: MainFriendsViewPresentable = {
         $0
     }(MainFriendsView())
-    
+
+    private var friendsPostViewModel: [FriendsPostViewModel] = []
 }
 // MARK: - UITableViewDelegate
 
@@ -72,7 +75,7 @@ extension MainViewController: UITableViewDelegate {
         heightForHeaderInSection section: Int
     ) -> CGFloat {
         if section == 0 {
-            return 90
+            return UITableView.automaticDimension
         } else {
             return 0
         }
@@ -87,8 +90,9 @@ extension MainViewController: UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        posts.count
+        return friendsPostViewModel.count
     }
+
     
     func numberOfSections(in tableView: UITableView) -> Int {
         1
@@ -109,7 +113,8 @@ extension MainViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let cell = tableView.dequeuCell(AuthorPostTableCell.self, indexPath: indexPath)
-        cell.setupPosts(with: posts[indexPath.row])
+//        cell.setupPosts(with: posts[indexPath.row])
+        cell.setupPosts(with: friendsPostViewModel[indexPath.row])
         return cell
     }
     
@@ -123,7 +128,10 @@ extension MainViewController: UITableViewDataSource {
 // MARK: - MainPresentable
 
 extension MainViewController: MainPresentable {
-    
+    func showFriendsPosts(_ friendsViewModel: [FriendsPostViewModel]) {
+        friendsPostViewModel = friendsViewModel
+        tableView.reloadData()
+    }
 }
 
 // MARK: - MainViewControllable

@@ -8,6 +8,15 @@
 import UIKit
 import TinyConstraints
 
+struct FriendsPostViewModel {
+    let myHeaderPosts: String?
+    let author: String?
+    let description: String
+    let postImage: UIImage
+    let avatarImage: UIImage?
+    let postId: Int
+}
+
 final class AuthorPostTableCell: UITableViewCell {
     
     // MARK: - Init
@@ -29,6 +38,7 @@ final class AuthorPostTableCell: UITableViewCell {
         contentView.addSubview(authorImage)
         contentView.addSubview(descriptionText)
         contentView.addSubview(postImage)
+        contentView.addSubview(favoriteButton)
     }
 
     private func addConstraints() {
@@ -49,7 +59,10 @@ final class AuthorPostTableCell: UITableViewCell {
         descriptionText.topToBottom(of: postImage, offset: Constants.DescriptionText.topToBottomOffset)
         descriptionText.leadingToSuperview(offset: Constants.DescriptionText.leadingAndTrailingToSuperViewOffset)
         descriptionText.trailingToSuperview(offset: Constants.DescriptionText.leadingAndTrailingToSuperViewOffset)
-        descriptionText.bottom(to: contentView, offset: Constants.DescriptionText.bottomOfsset)
+
+        favoriteButton.topToBottom(of: descriptionText, offset: 5)
+        favoriteButton.centerX(to: descriptionText)
+        favoriteButton.bottom(to: contentView, offset: -10)
     }
 
     // MARK: - Enums
@@ -84,15 +97,11 @@ final class AuthorPostTableCell: UITableViewCell {
         descriptionText.text = nil
     }
 
-    func setupPosts(with authorPosts: Post) {
+    func setupPosts(with authorPosts: FriendsPostViewModel) {
         authorName.text = authorPosts.author
         authorImage.image = authorPosts.avatarImage
         postImage.image = authorPosts.postImage
         descriptionText.text = authorPosts.description
-    }
-
-    func configure(with avatarImage: UIImage?) {
-        authorImage.image = avatarImage
     }
 
     // MARK: - Properties
@@ -130,6 +139,13 @@ final class AuthorPostTableCell: UITableViewCell {
 
     // TODO: - дописать кнопку с лайком, при нажатии на которую будет сохраняться в (CoreData)
     
+        // Add posts to favorite screen
+    private lazy var favoriteButton: UIButton = {
+        // TODO: - пока что так, чуть позднее если что переделать
+        $0.setImage(.heartImage, for: .normal)
+        return $0
+    }(UIButton())
+
 
     // TODO: - если что добавить функционал на postTap() {
     //    guard let postId = postId else { return }

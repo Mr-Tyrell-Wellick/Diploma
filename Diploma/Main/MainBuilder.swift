@@ -7,8 +7,9 @@
 
 import RIBs
 
-protocol MainDependecy: EmptyDependency {
-    
+protocol MainDependecy {
+    var postsService: PostsService { get }
+    var friendsPostsStream: PostsStream { get }
 }
 
 final class MainComponent: EmptyComponent {
@@ -22,7 +23,11 @@ protocol MainBuildable: Buildable {
 final class MainBuilder: Builder<MainDependecy>, MainBuildable {
     func build() -> MainRouting {
         let viewController = MainViewController()
-        let interactor = MainInteractor(presenter: viewController)
+        let interactor = MainInteractor(
+            presenter: viewController,
+            postsService: dependency.postsService,
+            friendsPostsStream: dependency.friendsPostsStream
+        )
         return MainRouter(
             interactor: interactor,
             viewController: viewController

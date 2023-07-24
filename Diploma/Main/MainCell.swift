@@ -21,7 +21,9 @@ final class MainCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    // MARK: - Functions
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         setup()
@@ -36,11 +38,12 @@ final class MainCell: UICollectionViewCell {
         layer.borderColor = UIColor.borderUserColor.cgColor
         layer.borderWidth = 2.0
     }
-    
-    func configure(with avatarImage: UIImage?) {
-        authorImage.image = avatarImage
-    }
-    
+
+    // TODO: - переделать
+//    func configure(with avatarImage: UIImage?) {
+//        authorImage.image = avatarImage
+//    }
+
     private func addConstraints() {
         authorImage.top(to: self, offset: Constants.AuthorImage.topOffset)
         authorImage.leading(to: self, offset: Constants.AuthorImage.leadindOffset)

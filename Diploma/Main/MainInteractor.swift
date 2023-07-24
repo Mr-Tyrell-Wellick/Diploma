@@ -6,13 +6,18 @@
 //
 
 import RIBs
+import UIKit
+import RxSwift
+import RxRelay
 
 protocol MainRouting: ViewableRouting {
     
 }
 
 protocol MainPresentable: Presentable {
-    
+
+    func showFriendsPosts(_ friendsViewModel: [FriendsPostViewModel])
+
     var listener: MainViewControllerListener? { get set }
 }
 
@@ -20,22 +25,78 @@ final class MainInteractor: PresentableInteractor<MainPresentable>, MainInteract
     
     weak var router: MainRouting?
     
-    override init(presenter: MainPresentable) {
+    init(
+        presenter: MainPresentable,
+        postsService: PostsService,
+        friendsPostsStream: PostsStream
+    ) {
+        self.postsService = postsService
+        self.friendsPostsStream = friendsPostsStream
         super.init(presenter: presenter)
         presenter.listener = self
     }
     
     override func didBecomeActive() {
         logActivate()
+        subscribeOnUiReady()
+        subscribeOnPostsStream()
     }
     
     override func willResignActive() {
         logDeactivate()
     }
+
+    private func subscribeOnUiReady() {
+        uiReady
+            .filter { $0 }
+            .flatMapLatest { [unowned self] _ in
+                postsService.getFriendsPosts()
+            }
+            .subscribe()
+            .disposeOnDeactivate(interactor: self)
+    }
+
+    private func subscribeOnPostsStream() {
+
+        Observable.combineLatest(
+            friendsPostsStream
+                .posts
+                .distinctUntilChanged(),
+            uiReady
+        )
+        .filter { $0.1 }
+        .map { [unowned self] posts, _ in
+            createPostsViewModel(posts)
+        }
+        .bind { [unowned self] friendsPostViewModel in
+            presenter.showFriendsPosts(friendsPostViewModel)
+        }
+        .disposeOnDeactivate(interactor: self)
+    }
+
+    private func createPostsViewModel(_ posts: [Post]) -> [FriendsPostViewModel] {
+        posts.map {
+            .init(
+                myHeaderPosts: $0.myHeaderPosts,
+                author: $0.author,
+                description: $0.description,
+                postImage: $0.postImage,
+                avatarImage: $0.avatarImage,
+                postId: $0.postId
+            )
+        }
+    }
+
+    private let postsService: PostsService
+    private let friendsPostsStream: PostsStream
+    private let uiReady = BehaviorRelay<Bool>(value: false)
 }
 
 // MARK: - MainViewControllerListener
 
 extension MainInteractor: MainViewControllerListener {
-    
+
+    func viewDidLoad() {
+        uiReady.accept(true)
+    }
 }

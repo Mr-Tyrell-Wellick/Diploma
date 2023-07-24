@@ -85,14 +85,14 @@ final class HomeInteractor: PresentableInteractor<HomePresentable>, HomeInteract
 
 extension HomeInteractor: HomeViewContollerListener {
     func didTapOnButton(_ type: TabBarButtonType) {
-                switch type {
-                case .main:
-                    router?.routeToMain()
-                case .profile:
-                    router?.routeToProfile()
-                case .favorites:
-                    router?.routeToFavorites()
-                }
+        switch type {
+        case .main:
+            router?.routeToMain()
+        case .profile:
+            router?.routeToProfile()
+        case .favorites:
+            router?.routeToFavorites()
+        }
     }
     
     func didLoad() {

@@ -58,11 +58,11 @@ extension UIImage {
     }
 
     class var heartFillImage: UIImage {
-        UIImage(named: "") ?? UIImage()
+        UIImage(named: "heart.fill") ?? UIImage()
     }
 
     class var heartImage: UIImage {
-        UIImage(named: "") ?? UIImage()
+        UIImage(named: "heart") ?? UIImage()
     }
 
     class var avatarImage: UIImage {
@@ -165,6 +165,17 @@ extension UIImage {
         UIImage(named: "gallery10") ?? UIImage()
     }
 
-    // TODO: - добавить фото, которые будут указаны в посту
+    // MARK: My posts
 
+    class var myPostOneImage: UIImage {
+        UIImage(named: "myPostOne") ?? UIImage()
+    }
+
+    class var myPostTwoImage: UIImage {
+        UIImage(named: "myPostTwo") ?? UIImage()
+    }
+
+    class var myPostThreeImage: UIImage {
+        UIImage(named: "myPostThree") ?? UIImage()
+    }
 }

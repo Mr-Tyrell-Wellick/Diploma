@@ -6,13 +6,18 @@
 //
 
 import RIBs
+import UIKit
+import RxSwift
+import RxRelay
 
 protocol ProfileRouting: ViewableRouting {
     
 }
 
 protocol ProfilePresentable: Presentable {
-    
+
+    func showPosts(_ viewModel: [PostViewModel])
+
     var listener: ProfileViewContollerListener? { get set }
 }
 
@@ -20,22 +25,77 @@ final class ProfileInteractor: PresentableInteractor <ProfilePresentable>, Profi
     
     weak var router: ProfileRouting?
     
-    override init(presenter: ProfilePresentable) {
+    init(
+        presenter: ProfilePresentable,
+         postsService: PostsService,
+         myPostsStream: PostsStream
+    ) {
+        self.postsService = postsService
+        self.myPostsStream = myPostsStream
         super.init(presenter: presenter)
         presenter.listener = self
     }
     
     override func didBecomeActive() {
         logActivate()
+        subscribeOnUiReady()
+        subscribeOnPostsStream()
     }
     
     override func willResignActive() {
         logDeactivate()
     }
+
+    private func subscribeOnUiReady() {
+        uiReady
+            .filter { $0 }
+            .flatMapLatest { [unowned self] _ in
+                postsService.getMyPosts()
+            }
+            .subscribe()
+            .disposeOnDeactivate(interactor: self)
+    }
+
+    private func subscribeOnPostsStream() {
+        Observable.combineLatest(
+            myPostsStream
+                .posts
+                .distinctUntilChanged(),
+            uiReady
+        )
+        .filter { $0.1 }
+        .map { [unowned self] posts, _ in
+            createPostsViewModel(posts)
+        }
+        .bind { [unowned self] postsViewModel in
+            presenter.showPosts(postsViewModel)
+        }
+        .disposeOnDeactivate(interactor: self)
+    }
+
+    private func createPostsViewModel(_ posts: [Post]) -> [PostViewModel] {
+        posts.map {
+            .init(
+                myHeaderPosts: $0.myHeaderPosts,
+                author: $0.author,
+                description: $0.description,
+                postImage: $0.postImage,
+                avatarImage: $0.avatarImage,
+                postId: $0.postId
+            )
+        }
+    }
+
+    private let postsService: PostsService
+    private let myPostsStream: PostsStream
+    private let uiReady = BehaviorRelay<Bool>(value: false)
 }
 
 // MARK: - ProfileViewControllerListener
 
 extension ProfileInteractor: ProfileViewContollerListener {
-    
+
+    func viewDidLoad() {
+        uiReady.accept(true)
+    }
 }

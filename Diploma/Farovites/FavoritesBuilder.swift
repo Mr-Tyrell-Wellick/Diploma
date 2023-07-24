@@ -7,12 +7,13 @@
 
 import RIBs
 
-protocol FavoritesDependency: EmptyDependency {
-
+protocol FavoritesDependency {
+    var postsService: PostsService { get }
+    var favoritesPostsStream: PostsStream { get }
 }
 
 protocol FavoritesComponent: EmptyComponent {
-
+    
 }
 
 protocol FavoritesBuildable: Buildable {
