@@ -77,12 +77,13 @@ final class MainInteractor: PresentableInteractor<MainPresentable>, MainInteract
     private func createPostsViewModel(_ posts: [Post]) -> [FriendsPostViewModel] {
         posts.map {
             .init(
-                myHeaderPosts: $0.myHeaderPosts,
+                postTitle: $0.postTitle,
                 author: $0.author,
                 description: $0.description,
                 postImage: $0.postImage,
                 avatarImage: $0.avatarImage,
-                postId: $0.postId
+                postId: $0.postId,
+                isLiked: $0.isFavorite
             )
         }
     }
@@ -98,5 +99,9 @@ extension MainInteractor: MainViewControllerListener {
 
     func viewDidLoad() {
         uiReady.accept(true)
+    }
+
+    func didLikePost(postId: Int) {
+        postsService.likePost(postId: postId)
     }
 }

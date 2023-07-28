@@ -9,7 +9,7 @@ import UIKit
 import TinyConstraints
 
 struct PostViewModel {
-    let myHeaderPosts: String?
+    let postTitle: String?
     let author: String?
     let description: String
     let postImage: UIImage
@@ -82,7 +82,7 @@ final class PostTableViewCell: UITableViewCell {
     }
 
     func setupMyPosts(with myPosts: PostViewModel) {
-        headerPost.text = myPosts.myHeaderPosts
+        headerPost.text = myPosts.postTitle
         myPostImage.image = myPosts.postImage
         myDescriptionText.text = myPosts.description
     }

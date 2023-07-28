@@ -14,7 +14,7 @@ struct DataGenerator {
     static  func getFriendsPosts() -> [Post] {
         [
             Post(
-                myHeaderPosts: nil,
+                postTitle: nil,
                 author: Strings.friendOne.localized,
                 description: Strings.friendOneDescription.localized,
                 postImage: .bengalCatImage,
@@ -22,7 +22,7 @@ struct DataGenerator {
                 postId: 0
             ),
             Post(
-                myHeaderPosts: nil,
+                postTitle: nil,
                 author: Strings.friendTwo.localized,
                 description: Strings.friendTwoDescription.localized,
                 postImage: .dogImage,
@@ -30,7 +30,7 @@ struct DataGenerator {
                 postId: 1
             ),
             Post(
-                myHeaderPosts: nil,
+                postTitle: nil,
                 author: Strings.friendThree.localized,
                 description: Strings.friendThreeDescription.localized,
                 postImage: .houseImage,
@@ -38,7 +38,7 @@ struct DataGenerator {
                 postId: 2
             ),
             Post(
-                myHeaderPosts: nil,
+                postTitle: nil,
                 author: Strings.friendFour.localized,
                 description: Strings.friendFourDescription.localized,
                 postImage: .catsImage,
@@ -46,7 +46,7 @@ struct DataGenerator {
                 postId: 3
             ),
             Post(
-                myHeaderPosts: nil,
+                postTitle: nil,
                 author: Strings.friendFive.localized,
                 description: Strings.friendFiveDescription.localized,
                 postImage: .lakeImage,
@@ -54,7 +54,7 @@ struct DataGenerator {
                 postId: 4
             ),
             Post(
-                myHeaderPosts: nil,
+                postTitle: nil,
                 author: Strings.friendSix.localized,
                 description: Strings.friendSixDescription.localized,
                 postImage: .dolphinImage,
@@ -69,7 +69,7 @@ struct DataGenerator {
     static func getMyPosts() -> [Post] {
         [
             Post(
-                myHeaderPosts: Strings.myHeaderPostOne.localized,
+                postTitle: Strings.myHeaderPostOne.localized,
                 author: nil,
                 description: Strings.myPostOne.localized,
                 postImage: .myPostOneImage,
@@ -77,7 +77,7 @@ struct DataGenerator {
                 postId: 0
             ),
             Post(
-                myHeaderPosts: Strings.myHeaderPostTwo.localized,
+                postTitle: Strings.myHeaderPostTwo.localized,
                 author: nil,
                 description: Strings.myPostTwo.localized,
                 postImage: .myPostTwoImage,
@@ -85,7 +85,7 @@ struct DataGenerator {
                 postId: 1
             ),
             Post(
-                myHeaderPosts: Strings.myHeaderPostThree.localized,
+                postTitle: Strings.myHeaderPostThree.localized,
                 author: nil,
                 description: Strings.myPostThree.localized,
                 postImage: .myPostThreeImage,

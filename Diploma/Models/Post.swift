@@ -9,25 +9,29 @@ import UIKit
 
 struct Post: Equatable {
 
-    let myHeaderPosts: String?
+    let postTitle: String?
     let author: String?
     let description: String
     let postImage: UIImage
     let avatarImage: UIImage?
     let postId: Int
+    var isFavorite: Bool
     
     init(
-        myHeaderPosts: String?,
+        postTitle: String?,
         author: String?,
         description: String,
         postImage: UIImage,
         avatarImage: UIImage?,
-        postId: Int) {
-            self.myHeaderPosts = myHeaderPosts
-            self.author = author
-            self.description = description
-            self.postImage = postImage
-            self.avatarImage = avatarImage
-            self.postId = postId
-        }
+        postId: Int,
+        isFavorite: Bool = false
+    ) {
+        self.postTitle = postTitle
+        self.author = author
+        self.description = description
+        self.postImage = postImage
+        self.avatarImage = avatarImage
+        self.postId = postId
+        self.isFavorite = isFavorite
+    }
 }

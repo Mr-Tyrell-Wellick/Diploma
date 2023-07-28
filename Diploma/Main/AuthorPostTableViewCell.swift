@@ -7,17 +7,28 @@
 
 import UIKit
 import TinyConstraints
+import RxSwift
+import RxGesture
 
 struct FriendsPostViewModel {
-    let myHeaderPosts: String?
+    let postTitle: String?
     let author: String?
     let description: String
     let postImage: UIImage
     let avatarImage: UIImage?
     let postId: Int
+    var isLiked: Bool = false
 }
 
+protocol AuthorPostListener: AnyObject {
+    func didTapLike(_ at: CGPoint)
+}
+
+
+
 final class AuthorPostTableCell: UITableViewCell {
+
+    weak var listener: AuthorPostListener?
     
     // MARK: - Init
     
@@ -25,6 +36,7 @@ final class AuthorPostTableCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addContentView()
         addConstraints()
+        subscribeOnFavoriteButton()
     }
     
     required init?(coder: NSCoder) {
@@ -39,6 +51,15 @@ final class AuthorPostTableCell: UITableViewCell {
         contentView.addSubview(descriptionText)
         contentView.addSubview(postImage)
         contentView.addSubview(favoriteButton)
+    }
+
+    private func subscribeOnFavoriteButton() {
+        favoriteButton.rx
+            .tapGesture().when(.recognized)
+            .bind { [unowned self] _ in
+                listener?.didTapLike(self.frame.origin)
+            }
+            .disposed(by: disposeBag)
     }
 
     private func addConstraints() {
@@ -95,6 +116,8 @@ final class AuthorPostTableCell: UITableViewCell {
         authorImage.image = nil
         postImage.image = nil
         descriptionText.text = nil
+        disposeBag = DisposeBag()
+        subscribeOnFavoriteButton()
     }
 
     func setupPosts(with authorPosts: FriendsPostViewModel) {
@@ -102,6 +125,12 @@ final class AuthorPostTableCell: UITableViewCell {
         authorImage.image = authorPosts.avatarImage
         postImage.image = authorPosts.postImage
         descriptionText.text = authorPosts.description
+    }
+
+    private func changeLikeButton(_ isLiked: Bool) {
+        UIView.animate(withDuration: 2, delay: 0, options: .curveEaseOut) { [unowned self] in
+            favoriteButton.setImage(isLiked ? .heartImage : .heartFillImage, for: .normal)
+        }
     }
 
     // MARK: - Properties
@@ -137,18 +166,12 @@ final class AuthorPostTableCell: UITableViewCell {
         return $0
     }(UILabel())
 
-    // TODO: - дописать кнопку с лайком, при нажатии на которую будет сохраняться в (CoreData)
-    
-        // Add posts to favorite screen
+    // Add posts to favorite screen
     private lazy var favoriteButton: UIButton = {
         // TODO: - пока что так, чуть позднее если что переделать
         $0.setImage(.heartImage, for: .normal)
         return $0
     }(UIButton())
 
-
-    // TODO: - если что добавить функционал на postTap() {
-    //    guard let postId = postId else { return }
-    //    delegate?.didDoubleTapToPost(posstId: postId)
-
+    private var disposeBag = DisposeBag()
 }

@@ -13,6 +13,7 @@ import RxGesture
 
 protocol ProfileViewContollerListener: AnyObject {
     func viewDidLoad()
+    func didTapSetStatus(_ newStatus: String?)
 }
 
 final class ProfileViewController: UIViewController {
@@ -58,6 +59,7 @@ final class ProfileViewController: UIViewController {
     }(ProfileHeaderView())
 
     private var postsViewModel: [PostViewModel] = []
+    private var status: String?
 }
 
 // MARK: - UITableViewDelegate
@@ -67,6 +69,8 @@ extension ProfileViewController: UITableViewDelegate {
     // TODO: - доделать (вписать header, который будет создан
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
+            profileHeaderView.listener = self
+            profileHeaderView.setStatus(status)
             return profileHeaderView
         } else {
             return nil
@@ -127,10 +131,21 @@ extension ProfileViewController: ProfilePresentable {
         postsViewModel = viewModel
         tableView.reloadData()
     }
+
+    func showStatus(_ status: String?) {
+        self.status = status
+        tableView.reloadSections(IndexSet(integer: 0), with: .none)
+    }
 }
 
 // MARK: - ProfileControllable
 
 extension ProfileViewController: ProfileViewControllable {
     
+}
+
+extension ProfileViewController:ProfileHeaderViewListener {
+    func didTapSetStatus(_ newStatus: String?) {
+        listener?.didTapSetStatus(newStatus)
+    }
 }

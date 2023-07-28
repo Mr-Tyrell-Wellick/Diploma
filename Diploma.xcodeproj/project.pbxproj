@@ -14,7 +14,6 @@
 		F7293F2B2A2DF8DB0063AC20 /* LoggedOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7293F2A2A2DF8DB0063AC20 /* LoggedOutViewController.swift */; };
 		F7293F2E2A2DF94D0063AC20 /* TabBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7293F2D2A2DF94D0063AC20 /* TabBarModel.swift */; };
 		F7293F332A2DFE870063AC20 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7293F322A2DFE870063AC20 /* Colors.xcassets */; };
-		F74B7F642A6D490C009B5BD7 /* Favorites.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F74B7F622A6D490C009B5BD7 /* Favorites.xcdatamodeld */; };
 		F74B7F662A6D49FD009B5BD7 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74B7F652A6D49FD009B5BD7 /* CoreDataService.swift */; };
 		F750B51D2A6BD116004C024B /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F750B51C2A6BD116004C024B /* PhotoCollectionViewCell.swift */; };
 		F774B9E32A29F4A0003D4F02 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F774B9E22A29F4A0003D4F02 /* AppDelegate.swift */; };
@@ -88,6 +87,10 @@
 		F7F24A432A5B42C0003CE73F /* FavoritesInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F24A422A5B42C0003CE73F /* FavoritesInteractor.swift */; };
 		F7F24A452A5B42C6003CE73F /* FavoritesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F24A442A5B42C6003CE73F /* FavoritesBuilder.swift */; };
 		F7F24A472A5B42CC003CE73F /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F24A462A5B42CC003CE73F /* FavoritesViewController.swift */; };
+		F7F43EEA2A72884E00B275C1 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F43EE92A72884E00B275C1 /* Array.swift */; };
+		F7F43EED2A7288ED00B275C1 /* PostModel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F43EEC2A7288ED00B275C1 /* PostModel+CoreDataClass.swift */; };
+		F7F43EF02A72891A00B275C1 /* Diploma.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7F43EEE2A72891A00B275C1 /* Diploma.xcdatamodeld */; };
+		F7F43EF22A728B6300B275C1 /* PostModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F43EF12A728B6300B275C1 /* PostModel+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,7 +101,6 @@
 		F7293F2A2A2DF8DB0063AC20 /* LoggedOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedOutViewController.swift; sourceTree = "<group>"; };
 		F7293F2D2A2DF94D0063AC20 /* TabBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarModel.swift; sourceTree = "<group>"; };
 		F7293F322A2DFE870063AC20 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
-		F74B7F632A6D490C009B5BD7 /* Favorites.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Favorites.xcdatamodel; sourceTree = "<group>"; };
 		F74B7F652A6D49FD009B5BD7 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		F750B51C2A6BD116004C024B /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		F774B9DF2A29F4A0003D4F02 /* Diploma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Diploma.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +171,10 @@
 		F7F24A422A5B42C0003CE73F /* FavoritesInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesInteractor.swift; sourceTree = "<group>"; };
 		F7F24A442A5B42C6003CE73F /* FavoritesBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesBuilder.swift; sourceTree = "<group>"; };
 		F7F24A462A5B42CC003CE73F /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		F7F43EE92A72884E00B275C1 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		F7F43EEC2A7288ED00B275C1 /* PostModel+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostModel+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F7F43EEF2A72891A00B275C1 /* Diploma.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Diploma.xcdatamodel; sourceTree = "<group>"; };
+		F7F43EF12A728B6300B275C1 /* PostModel+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +243,7 @@
 				F7BEAF752A30BD5B00A19DE8 /* String+extension.swift */,
 				F7E9F7D22A6033AA00EAAE40 /* UICollectionView.swift */,
 				F7E9F7E32A63240800EAAE40 /* UITableView.swift */,
+				F7F43EE92A72884E00B275C1 /* Array.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -263,7 +270,8 @@
 		F74B7F612A6D48E0009B5BD7 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				F74B7F622A6D490C009B5BD7 /* Favorites.xcdatamodeld */,
+				F7F43EEB2A7288DC00B275C1 /* Models */,
+				F7F43EEE2A72891A00B275C1 /* Diploma.xcdatamodeld */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -431,6 +439,15 @@
 			path = Farovites;
 			sourceTree = "<group>";
 		};
+		F7F43EEB2A7288DC00B275C1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F7F43EEC2A7288ED00B275C1 /* PostModel+CoreDataClass.swift */,
+				F7F43EF12A728B6300B275C1 /* PostModel+CoreDataProperties.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -525,10 +542,10 @@
 				F7E9F7E02A61C7B600EAAE40 /* AuthorPostTableViewCell.swift in Sources */,
 				F7E9F7D32A6033AA00EAAE40 /* UICollectionView.swift in Sources */,
 				F7B8EFAB2A549FD7004B82E9 /* UserDefaultsStorage.swift in Sources */,
-				F74B7F642A6D490C009B5BD7 /* Favorites.xcdatamodeld in Sources */,
 				F7B8EF8B2A45CFAD004B82E9 /* FirebaseAuthenticationService.swift in Sources */,
 				F7B23B7C2A30A2230066256D /* LoggedOutRouter.swift in Sources */,
 				F7E9F7D52A603A9600EAAE40 /* ProfileHeaderView.swift in Sources */,
+				F7F43EEA2A72884E00B275C1 /* Array.swift in Sources */,
 				F799A7F82A41D62800D52F84 /* BiometryAuthenticationService.swift in Sources */,
 				F7B8EFA42A4EEF99004B82E9 /* HomeViewController.swift in Sources */,
 				F7F24A312A5B4213003CE73F /* MainInteractor.swift in Sources */,
@@ -541,6 +558,7 @@
 				F7E9F7F92A69406400EAAE40 /* DataGenerator.swift in Sources */,
 				F7152F732A3C72B60007094B /* UITextField.swift in Sources */,
 				F7B23B802A30A2390066256D /* LoggedOutBuilder.swift in Sources */,
+				F7F43EF02A72891A00B275C1 /* Diploma.xcdatamodeld in Sources */,
 				F7F24A382A5B4249003CE73F /* ProfileBuilder.swift in Sources */,
 				F7E40AEB2A31042F002E5869 /* SignUpInteractor.swift in Sources */,
 				F7293F1D2A2D14840063AC20 /* UIColor.swift in Sources */,
@@ -569,6 +587,7 @@
 				F774B9E52A29F4A0003D4F02 /* SceneDelegate.swift in Sources */,
 				F7F24A3C2A5B425D003CE73F /* ProfileRouter.swift in Sources */,
 				F7F24A3A2A5B424F003CE73F /* ProfileInteractor.swift in Sources */,
+				F7F43EED2A7288ED00B275C1 /* PostModel+CoreDataClass.swift in Sources */,
 				F7B23B722A2FB6040066256D /* RootInteractor.swift in Sources */,
 				F7B23B742A2FB76C0066256D /* RootBuilder.swift in Sources */,
 				F7B8EF982A462E08004B82E9 /* User.swift in Sources */,
@@ -587,6 +606,7 @@
 				F7BEAF742A30BB5600A19DE8 /* String.swift in Sources */,
 				F7E9F7E62A6326C400EAAE40 /* MainFriendsView.swift in Sources */,
 				F7E9F7F72A693C8C00EAAE40 /* PostsStream.swift in Sources */,
+				F7F43EF22A728B6300B275C1 /* PostModel+CoreDataProperties.swift in Sources */,
 				F7E9F7F12A6825D900EAAE40 /* PhotoBuilder.swift in Sources */,
 				F750B51D2A6BD116004C024B /* PhotoCollectionViewCell.swift in Sources */,
 				F7B23B782A30702B0066256D /* UIViewController.swift in Sources */,
@@ -909,13 +929,13 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		F74B7F622A6D490C009B5BD7 /* Favorites.xcdatamodeld */ = {
+		F7F43EEE2A72891A00B275C1 /* Diploma.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				F74B7F632A6D490C009B5BD7 /* Favorites.xcdatamodel */,
+				F7F43EEF2A72891A00B275C1 /* Diploma.xcdatamodel */,
 			);
-			currentVersion = F74B7F632A6D490C009B5BD7 /* Favorites.xcdatamodel */;
-			path = Favorites.xcdatamodeld;
+			currentVersion = F7F43EEF2A72891A00B275C1 /* Diploma.xcdatamodel */;
+			path = Diploma.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

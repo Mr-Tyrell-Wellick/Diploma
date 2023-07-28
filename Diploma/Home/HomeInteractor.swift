@@ -35,22 +35,35 @@ protocol HomeListener: AnyObject {
 final class HomeInteractor: PresentableInteractor<HomePresentable>, HomeInteractable {
     
     weak var router: HomeRouting?
-    weak var listener: HomeListener? 
+    weak var listener: HomeListener?
     
-    override init(presenter: HomePresentable) {
+    init(presenter: HomePresentable,
+         coreDataService: CoreDataService
+    ) {
+        self.coreDataService = coreDataService
         super.init(presenter: presenter)
         presenter.listener = self
     }
     
     override func didBecomeActive() {
         logActivate()
-        subscribeOnUiReady()
+        setupIfNeeded()
+            .subscribe(onCompleted: { [unowned self] in
+                subscribeOnUiReady()
+            })
+            .disposeOnDeactivate(interactor: self)
     }
     
     override func willResignActive() {
         logDeactivate()
     }
-    
+
+    private func setupIfNeeded() -> Completable {
+        guard !UserDefaults.standard.bool(forKey: "isFirstLoad") else { return .empty() }
+        UserDefaults.standard.set(true, forKey: "isFirstLoad")
+        return coreDataService.initStorage()
+    }
+
     private func subscribeOnUiReady() {
         uiReady.filter { $0 }
             .bind { [unowned self] _ in
@@ -77,7 +90,8 @@ final class HomeInteractor: PresentableInteractor<HomePresentable>, HomeInteract
             }
             .disposeOnDeactivate(interactor: self)
     }
-    
+
+    private let coreDataService: CoreDataService
     private let uiReady = BehaviorRelay<Bool>(value: false)
 }
 

@@ -17,6 +17,7 @@ protocol ProfileRouting: ViewableRouting {
 protocol ProfilePresentable: Presentable {
 
     func showPosts(_ viewModel: [PostViewModel])
+    func showStatus(_ status: String?)
 
     var listener: ProfileViewContollerListener? { get set }
 }
@@ -27,8 +28,8 @@ final class ProfileInteractor: PresentableInteractor <ProfilePresentable>, Profi
     
     init(
         presenter: ProfilePresentable,
-         postsService: PostsService,
-         myPostsStream: PostsStream
+        postsService: PostsService,
+        myPostsStream: PostsStream
     ) {
         self.postsService = postsService
         self.myPostsStream = myPostsStream
@@ -76,7 +77,7 @@ final class ProfileInteractor: PresentableInteractor <ProfilePresentable>, Profi
     private func createPostsViewModel(_ posts: [Post]) -> [PostViewModel] {
         posts.map {
             .init(
-                myHeaderPosts: $0.myHeaderPosts,
+                postTitle: $0.postTitle,
                 author: $0.author,
                 description: $0.description,
                 postImage: $0.postImage,
@@ -97,5 +98,9 @@ extension ProfileInteractor: ProfileViewContollerListener {
 
     func viewDidLoad() {
         uiReady.accept(true)
+    }
+
+    func didTapSetStatus(_ newStatus: String?) {
+        presenter.showStatus(newStatus)
     }
 }

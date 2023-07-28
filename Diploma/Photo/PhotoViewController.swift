@@ -93,8 +93,8 @@ extension PhotoViewController: UICollectionViewDataSource {
                 for: indexPath
             )
         }
-        let post = photoPost[indexPath.item]
-        cell.configurePhoto(with: post.galleryImage)
+//        let post = photoPost[indexPath.item]
+//        cell.configurePhoto(with: post.galleryImage)
         return cell
     }
 }

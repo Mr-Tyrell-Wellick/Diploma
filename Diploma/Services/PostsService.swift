@@ -7,41 +7,88 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 protocol PostsService {
-    func getFriendsPosts() -> Single<Bool>
-    func getMyPosts() -> Single<Bool>
-    func getFavoritesPosts() -> Single<Bool>
+    func getFriendsPosts() -> Completable
+    func getMyPosts() -> Completable
+    func getFavoritesPosts() -> Completable
+    func likePost(postId: Int)
 }
 
 final class PostsServiceImpl: PostsService {
 
     init(friendsPostsStream: PostsMutableStream,
          myPostsStream: PostsMutableStream,
-         favoritesPostsStream: PostsMutableStream
+         favoritesPostsStream: PostsMutableStream,
+         coreDataService: CoreDataService
     ) {
         self.friendsPostsStream = friendsPostsStream
         self.myPostsStream = myPostsStream
-        self.farovitesPostsStream = favoritesPostsStream
+        self.favoritesPostsStream = favoritesPostsStream
+        self.coreDataService = coreDataService
     }
     
-    func getFriendsPosts() -> RxSwift.Single<Bool> {
-        let friendsPosts = DataGenerator.getFriendsPosts()
-        friendsPostsStream.updatePosts(friendsPosts)
-        return .just(true)
+    func getFriendsPosts() -> Completable {
+        .create { [unowned self] observer in
+            // WARNING: - maybe a fail
+            let predicate = NSPredicate(
+                format: "%K != %@",
+                argumentArray: [#keyPath(PostModel.author), nil]
+            )
+            return coreDataService
+                .fetchMatching(predicate: predicate)
+                .subscribe (onSuccess: { [unowned self] friendsPosts in
+                    friendsPostsStream.updatePosts(friendsPosts)
+                    observer(.completed)
+                })
+        }
     }
 
-    func getMyPosts() -> RxSwift.Single<Bool> {
-        let myPosts = DataGenerator.getMyPosts()
-        myPostsStream.updatePosts(myPosts)
-        return .just(true)
+    func getMyPosts() -> Completable {
+        .create { [unowned self] observer in
+            // WARNING: - maybe a fail
+            let predicate = NSPredicate(
+                format: "%K = %@",
+                argumentArray: [#keyPath(PostModel.author), nil]
+            )
+            return coreDataService
+                .fetchMatching(predicate: predicate)
+                .subscribe(onSuccess: { [unowned self] friendsPosts in
+                    myPostsStream.updatePosts(friendsPosts)
+                    observer(.completed)
+                })
+        }
     }
 
-    func getFavoritesPosts() -> RxSwift.Single<Bool> {
-        .just(true)
+    func getFavoritesPosts() -> Completable {
+        .create { [unowned self] observer in
+            // WARNING: - maybe a fail
+            let predicate = NSPredicate(
+                format: "%K = %@",
+                argumentArray: [#keyPath(PostModel.isFavorite), true]
+            )
+            return coreDataService
+                .fetchMatching(predicate: predicate)
+                .subscribe(onSuccess: { [unowned self] friendsPosts in
+                    favoritesPostsStream.updatePosts(friendsPosts)
+                    observer(.completed)
+                })
+        }
+    }
+
+
+    func likePost(postId: Int) {
+        coreDataService
+            .likePost(postId)
+            .andThen(getFriendsPosts())
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 
     private let friendsPostsStream: PostsMutableStream
     private let myPostsStream: PostsMutableStream
-    private let farovitesPostsStream: PostsMutableStream
+    private let favoritesPostsStream: PostsMutableStream
+    private let coreDataService: CoreDataService
+    private let disposeBag = DisposeBag()
 }

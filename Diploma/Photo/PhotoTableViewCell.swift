@@ -127,8 +127,8 @@ extension PhotoTableViewCell: UICollectionViewDataSource {
         }
         cell.layer.cornerRadius = 6
         cell.clipsToBounds = true
-        let post = photoPost[indexPath.item]
-        cell.configurePhoto(with: post.galleryImage)
+//        let post = photoPost[indexPath.item]
+//        cell.configurePhoto(with: post.galleryImage)
         return cell
     }
     

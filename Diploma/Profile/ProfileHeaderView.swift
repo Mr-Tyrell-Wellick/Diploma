@@ -11,14 +11,18 @@ import RxSwift
 import RxGesture
 
 protocol ProfileHeaderViewListener: AnyObject {
-
+    func didTapSetStatus(_ newStatus: String?)
 }
 
 protocol ProfileHeaderViewPresentable: UITableViewHeaderFooterView {
-
+    var listener: ProfileHeaderViewListener? { get set }
+    
+    func setStatus(_ status: String?)
 }
 
-class ProfileHeaderView: UITableViewHeaderFooterView, ProfileHeaderViewPresentable {
+class ProfileHeaderView: UITableViewHeaderFooterView {
+
+    weak var listener: ProfileHeaderViewListener?
 
     // MARK: - Init
 
@@ -26,6 +30,7 @@ class ProfileHeaderView: UITableViewHeaderFooterView, ProfileHeaderViewPresentab
         self.init(frame: .zero)
         addView()
         addConstraints()
+        subscribeOnStatusButtonTap()
     }
 
     // MARK: - Functions
@@ -48,13 +53,16 @@ class ProfileHeaderView: UITableViewHeaderFooterView, ProfileHeaderViewPresentab
         contentView.addSubview(statusButton)
     }
 
-    //    private func subscribeOnStatusButtonTap() {
-    //        statusButton.rx
-    //            .tapGesture()
-    //            .when(.recognized)
-    //            .bind { [unowned self] _ in
-    //                listener.
-    //            }
+    private func subscribeOnStatusButtonTap() {
+        statusButton.rx
+            .tapGesture()
+            .when(.recognized)
+            .bind { [unowned self] _ in
+                listener?.didTapSetStatus(statusTextField.text)
+                statusTextField.text = nil
+            }
+            .disposed(by: disposeBag)
+    }
 
     private func addConstraints() {
 
@@ -129,7 +137,7 @@ class ProfileHeaderView: UITableViewHeaderFooterView, ProfileHeaderViewPresentab
     }(UIImageView())
 
     // User name
-    private let userName: UILabel = {
+    private lazy var userName: UILabel = {
         $0.text = Strings.userName.localized
         $0.textColor = .titleColor
         $0.font = .fullNameFont
@@ -137,7 +145,7 @@ class ProfileHeaderView: UITableViewHeaderFooterView, ProfileHeaderViewPresentab
     }(UILabel())
 
     // Status
-    private let statusLabel: UILabel = {
+    private lazy var statusLabel: UILabel = {
         $0.text = "Busy"
         $0.textColor = .titleColor
         $0.font = .statusFont
@@ -145,7 +153,7 @@ class ProfileHeaderView: UITableViewHeaderFooterView, ProfileHeaderViewPresentab
     }(UILabel())
 
     // Status Text Field
-    private let statusTextField: UITextField = {
+    private lazy var statusTextField: UITextField = {
         $0.setupTextFieldAndAttributes(
             placeholder: Strings.statusTextField.localized,
             textColor: .titleColor
@@ -176,4 +184,14 @@ class ProfileHeaderView: UITableViewHeaderFooterView, ProfileHeaderViewPresentab
         )
         return $0
     }(UIButton())
+
+    private let disposeBag = DisposeBag()
+}
+
+// MARK: - ProfileHeaderViewPresentable
+
+extension ProfileHeaderView: ProfileHeaderViewPresentable {
+    func setStatus(_ status: String?) {
+        statusLabel.text = status
+    }
 }

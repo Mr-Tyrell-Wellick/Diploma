@@ -13,6 +13,7 @@ import RxGesture
 
 protocol MainViewControllerListener: AnyObject {
     func viewDidLoad()
+    func didLikePost(postId: Int)
 }
 
 final class MainViewController: UIViewController {
@@ -113,7 +114,7 @@ extension MainViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let cell = tableView.dequeuCell(AuthorPostTableCell.self, indexPath: indexPath)
-//        cell.setupPosts(with: posts[indexPath.row])
+        cell.listener = self
         cell.setupPosts(with: friendsPostViewModel[indexPath.row])
         return cell
     }
@@ -122,7 +123,6 @@ extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         false
     }
-    
 }
 
 // MARK: - MainPresentable
@@ -138,4 +138,11 @@ extension MainViewController: MainPresentable {
 
 extension MainViewController: MainViewControllable {
     
+}
+
+extension MainViewController: AuthorPostListener {
+    func didTapLike(_ at: CGPoint) {
+        guard let indexPath = tableView.indexPathForRow(at: at) else { return }
+        listener?.didLikePost(postId: friendsPostViewModel[indexPath.row].postId)
+    }
 }
