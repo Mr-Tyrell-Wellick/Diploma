@@ -15,7 +15,7 @@
       "scale" : "1x"
     },
     {
-      "filename" : "heart.circle 1.png",
+      "filename" : "heart.circle 3.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -26,7 +26,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "heart.circle.png",
+      "filename" : "heart.circle 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

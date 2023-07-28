@@ -3,7 +3,7 @@
     <entity name="PostModel" representedClassName="PostModel" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String"/>
         <attribute name="avatarImage" optional="YES" attributeType="Binary"/>
-        <attribute name="isFavorite" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isFavorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="postDescription" attributeType="String"/>
         <attribute name="postId" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="postImage" attributeType="Binary"/>

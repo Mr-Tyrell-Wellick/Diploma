@@ -21,30 +21,30 @@ protocol ProfileHeaderViewPresentable: UITableViewHeaderFooterView {
 }
 
 class ProfileHeaderView: UITableViewHeaderFooterView {
-
+    
     weak var listener: ProfileHeaderViewListener?
-
+    
     // MARK: - Init
-
+    
     convenience init() {
         self.init(frame: .zero)
         addView()
         addConstraints()
         subscribeOnStatusButtonTap()
     }
-
+    
     // MARK: - Functions
-
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         setupBorders()
     }
-
+    
     private func setupBorders() {
         avatar.layer.borderColor = UIColor.borderUserColor.cgColor
         statusTextField.layer.borderColor = UIColor.borderUserColor.cgColor
     }
-
+    
     private func addView() {
         contentView.addSubview(avatar)
         contentView.addSubview(userName)
@@ -52,7 +52,7 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
         contentView.addSubview(statusTextField)
         contentView.addSubview(statusButton)
     }
-
+    
     private func subscribeOnStatusButtonTap() {
         statusButton.rx
             .tapGesture()
@@ -63,79 +63,84 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
             }
             .disposed(by: disposeBag)
     }
-
+    
     private func addConstraints() {
-
+        
         avatar.topToSuperview(offset: Constants.Avatar.topToSuperViewOffset)
         avatar.leadingToSuperview(offset: Constants.Avatar.leadingToSuperViewOffset)
         avatar.width(Constants.Avatar.withAndHeightOffset)
         avatar.height(Constants.Avatar.withAndHeightOffset)
-
+        
         userName.top(to: avatar, offset: Constants.UserName.topOffset)
         userName.leading(to: avatar, offset: Constants.UserName.leadingOffset)
-
+        
         statusLabel.topToBottom(of: userName, offset: Constants.StatusLabel.topToBotomOffset)
         statusLabel.leading(to: userName)
-
-        statusTextField.topToSuperview(offset: Constants.StatusTextField.topToSuperViewOffset)
+        statusLabel.trailingToSuperview(offset: Constants.StatusLabel.trailingToSuperviewOffset)
+        statusLabel.height(Constants.StatusLabel.heightOffset)
+        
+        statusTextField.topToBottom(of: statusLabel, offset: Constants.StatusTextField.topToBottomOffset)
         statusTextField.leadingToSuperview(offset: Constants.StatusTextField.leadingToSuperViewOffset)
         statusTextField.trailing(to: statusButton)
         statusTextField.height(Constants.StatusTextField.heightOffset)
-
-        statusButton.topToSuperview(offset: Constants.StatusButton.topToSuperViewOffset)
+        
+        statusButton.topToBottom(of: statusTextField, offset: Constants.StatusButton.topToBottomOffset)
         statusButton.leadingToSuperview(offset: Constants.StatusButton.leadingAndTrailingOffset)
         statusButton.trailingToSuperview(offset: Constants.StatusButton.leadingAndTrailingOffset)
         statusButton.width(Constants.StatusButton.widthOffset)
         statusButton.height(Constants.StatusButton.heightOffset)
         statusButton.bottomToSuperview(offset: Constants.StatusButton.bottomToSuperViewOffset)
     }
-
+    
     // MARK: - Enum
-
+    
     private enum Constants {
-
+        
         enum Avatar {
             static let topToSuperViewOffset: CGFloat = 16
             static let leadingToSuperViewOffset: CGFloat = 16
             static let withAndHeightOffset: CGFloat = 100
         }
-
+        
         enum UserName {
             static let topOffset: CGFloat = 10
             static let leadingOffset: CGFloat = 130
         }
-
+        
         enum StatusLabel {
             static let topToBotomOffset: CGFloat = 5
+            static let trailingToSuperviewOffset: CGFloat = 20
+            static let heightOffset: CGFloat = 15
         }
-
+        
         enum StatusTextField {
-            static let topToSuperViewOffset: CGFloat = 80
+            static let topToBottomOffset: CGFloat = 20
             static let leadingToSuperViewOffset: CGFloat = 140
             static let heightOffset:CGFloat = 40
         }
-
+        
         enum StatusButton {
-            static let topToSuperViewOffset: CGFloat = 132
+            static let topToBottomOffset: CGFloat = 20
             static let leadingAndTrailingOffset: CGFloat = 35
             static let widthOffset: CGFloat = 340
             static let heightOffset: CGFloat = 50
             static let bottomToSuperViewOffset: CGFloat = -30
         }
     }
-
+    
     // MARK: - Properties
-
+    
     private lazy var avatar: UIImageView = {
         $0.image = .avatarImage
         $0.layer.borderColor = UIColor.borderUserColor.cgColor
         $0.layer.cornerRadius = 50
         $0.layer.masksToBounds = true
+        $0.contentMode = .scaleAspectFill
         $0.layer.borderWidth = 3
         $0.isUserInteractionEnabled = true
         return $0
     }(UIImageView())
-
+    
     // User name
     private lazy var userName: UILabel = {
         $0.text = Strings.userName.localized
@@ -143,15 +148,15 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
         $0.font = .fullNameFont
         return $0
     }(UILabel())
-
+    
     // Status
     private lazy var statusLabel: UILabel = {
-        $0.text = "Busy"
+        $0.numberOfLines = 0
         $0.textColor = .titleColor
         $0.font = .statusFont
         return $0
     }(UILabel())
-
+    
     // Status Text Field
     private lazy var statusTextField: UITextField = {
         $0.setupTextFieldAndAttributes(
@@ -172,7 +177,7 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
         $0.leftViewMode = .always
         return $0
     }(UITextField())
-
+    
     // Status button
     private let statusButton: UIButton = {
         $0.setupButton(
@@ -184,7 +189,7 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
         )
         return $0
     }(UIButton())
-
+    
     private let disposeBag = DisposeBag()
 }
 

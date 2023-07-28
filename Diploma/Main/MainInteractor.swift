@@ -57,7 +57,6 @@ final class MainInteractor: PresentableInteractor<MainPresentable>, MainInteract
     }
 
     private func subscribeOnPostsStream() {
-
         Observable.combineLatest(
             friendsPostsStream
                 .posts
@@ -101,7 +100,9 @@ extension MainInteractor: MainViewControllerListener {
         uiReady.accept(true)
     }
 
-    func didLikePost(postId: Int) {
-        postsService.likePost(postId: postId)
+    func didTapLikeButton(postId: Int, isLiked: Bool) {
+        isLiked
+        ? postsService.dislikePost(postId: postId)
+        : postsService.likePost(postId: postId)
     }
 }

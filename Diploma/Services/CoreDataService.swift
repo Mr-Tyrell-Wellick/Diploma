@@ -15,20 +15,42 @@ protocol CoreDataService {
     func initStorage() -> Completable
     func fetchAllPosts() -> Single<[Post]>
     func fetchMatching(predicate: NSPredicate) -> Single<[Post]>
-    func likePost(_ id: Int) -> Completable
+    func update<T: NSManagedObject>(
+        entity: T.Type,
+        filterPredicate: NSPredicate,
+        propertiesToUpdate: [AnyHashable: Any]
+    ) -> Completable
+}
+
+enum CoreDataError: Error {
+    case fetchError
 }
 
 final class CoreDataServiceImpl: CoreDataService {
 
-    func likePost(_ id: Int) -> Completable {
-        fetchMatching(
-            predicate: NSPredicate(format: "%K = %@",
-            argumentArray: [#keyPath(PostModel.postId), id])
-        )
-        .flatMapCompletable { [unowned self] fetchedPosts in
-            guard var post = fetchedPosts.first else { return .empty() }
-            post.isFavorite = true
-            return deleteBy(id: id).andThen(insertPost(post))
+    func update<T: NSManagedObject>(
+        entity: T.Type,
+        filterPredicate: NSPredicate,
+        propertiesToUpdate: [AnyHashable: Any]
+    ) -> Completable {
+        let entityName = String(describing: entity)
+        let updateRequest = NSBatchUpdateRequest(entityName: entityName)
+        updateRequest.predicate = filterPredicate
+        updateRequest.propertiesToUpdate = propertiesToUpdate
+        return .create { [unowned self] observer in
+            backgroundContext.perform { [unowned self] in
+                do {
+                    try backgroundContext.execute(updateRequest)
+                    DispatchQueue.main.async {
+                        observer(.completed)
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        observer(.error(error))
+                    }
+                }
+            }
+            return Disposables.create {}
         }
     }
 
@@ -40,8 +62,9 @@ final class CoreDataServiceImpl: CoreDataService {
                 fetchRequest.predicate = predicate
                 do {
                     let result = try backgroundContext.fetch(fetchRequest)
+                    let mappedResult = result.mapToSimplePost()
                     DispatchQueue.main.async {
-                        observer(.success(result.mapToSimplePost()))
+                        observer(.success(mappedResult))
                     }
                 } catch {
                     print(observer(.failure(error)))
@@ -79,7 +102,7 @@ final class CoreDataServiceImpl: CoreDataService {
                 do {
                     let result = try backgroundContext.fetch(fetchRequest)
                     result.forEach { backgroundContext.delete($0) }
-//                    saveBackgroundContext()
+                    saveBackgroundContext()
                     DispatchQueue.main.async {
                         observer(.completed)
                     }
@@ -105,7 +128,6 @@ final class CoreDataServiceImpl: CoreDataService {
 
             initialPosts.forEach { initialPost in
                 backgroundQueue.async(group: dispatchGroup) {
-                    // TODO: - убрать копи пасту
                     self.backgroundContext.perform { [unowned self] in
                         let post = PostModel(context: backgroundContext)
                         post.fillFromSimplePost(initialPost)
@@ -126,8 +148,9 @@ final class CoreDataServiceImpl: CoreDataService {
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "author", ascending: true)]
             do {
                 let allPosts = try backgroundContext.fetch(fetchRequest)
+                let mappedResult = allPosts.mapToSimplePost()
                 DispatchQueue.main.async {
-                    observer(.success(allPosts.mapToSimplePost()))
+                    observer(.success(mappedResult))
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -169,3 +192,4 @@ final class CoreDataServiceImpl: CoreDataService {
         qos: .default
     )
 }
+

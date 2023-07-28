@@ -13,7 +13,7 @@ import RxGesture
 
 protocol MainViewControllerListener: AnyObject {
     func viewDidLoad()
-    func didLikePost(postId: Int)
+    func didTapLikeButton(postId: Int, isLiked: Bool)
 }
 
 final class MainViewController: UIViewController {
@@ -143,6 +143,7 @@ extension MainViewController: MainViewControllable {
 extension MainViewController: AuthorPostListener {
     func didTapLike(_ at: CGPoint) {
         guard let indexPath = tableView.indexPathForRow(at: at) else { return }
-        listener?.didLikePost(postId: friendsPostViewModel[indexPath.row].postId)
+        let post = friendsPostViewModel[indexPath.row]
+        listener?.didTapLikeButton(postId: post.postId, isLiked: post.isLiked)
     }
 }

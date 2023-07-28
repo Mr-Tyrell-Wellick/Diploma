@@ -14,6 +14,7 @@ protocol PostsService {
     func getMyPosts() -> Completable
     func getFavoritesPosts() -> Completable
     func likePost(postId: Int)
+    func dislikePost(postId: Int)
 }
 
 final class PostsServiceImpl: PostsService {
@@ -31,7 +32,6 @@ final class PostsServiceImpl: PostsService {
     
     func getFriendsPosts() -> Completable {
         .create { [unowned self] observer in
-            // WARNING: - maybe a fail
             let predicate = NSPredicate(
                 format: "%K != %@",
                 argumentArray: [#keyPath(PostModel.author), nil]
@@ -47,7 +47,6 @@ final class PostsServiceImpl: PostsService {
 
     func getMyPosts() -> Completable {
         .create { [unowned self] observer in
-            // WARNING: - maybe a fail
             let predicate = NSPredicate(
                 format: "%K = %@",
                 argumentArray: [#keyPath(PostModel.author), nil]
@@ -63,7 +62,6 @@ final class PostsServiceImpl: PostsService {
 
     func getFavoritesPosts() -> Completable {
         .create { [unowned self] observer in
-            // WARNING: - maybe a fail
             let predicate = NSPredicate(
                 format: "%K = %@",
                 argumentArray: [#keyPath(PostModel.isFavorite), true]
@@ -77,10 +75,29 @@ final class PostsServiceImpl: PostsService {
         }
     }
 
-
     func likePost(postId: Int) {
+        likeDislikePost(postId: postId, setLikeTo: true)
+    }
+
+    func dislikePost(postId: Int) {
+        likeDislikePost(postId: postId, setLikeTo: false)
+    }
+
+    private func likeDislikePost(postId: Int, setLikeTo:Bool) {
+        let filterPredicate = NSPredicate(
+            format: "%K = %@ AND %K != %@",
+            argumentArray: [
+                #keyPath(PostModel.postId), postId,
+                #keyPath(PostModel.author), nil
+            ]
+        )
+        let propertiesToUpdate = [#keyPath(PostModel.isFavorite): setLikeTo]
         coreDataService
-            .likePost(postId)
+            .update(
+                entity: PostModel.self,
+                filterPredicate: filterPredicate,
+                propertiesToUpdate: propertiesToUpdate
+            )
             .andThen(getFriendsPosts())
             .subscribe()
             .disposed(by: disposeBag)

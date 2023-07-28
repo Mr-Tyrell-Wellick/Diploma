@@ -21,7 +21,8 @@ extension Array where Element == PostModel {
                 description: $0.postDescription,
                 postImage: postImage,
                 avatarImage: avatarImage,
-                postId: Int($0.postId)
+                postId: Int($0.postId),
+                isFavorite: $0.isFavorite
             )
         }
     }

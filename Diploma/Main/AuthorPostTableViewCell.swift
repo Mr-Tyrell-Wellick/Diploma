@@ -27,7 +27,7 @@ protocol AuthorPostListener: AnyObject {
 
 
 final class AuthorPostTableCell: UITableViewCell {
-
+    
     weak var listener: AuthorPostListener?
     
     // MARK: - Init
@@ -42,9 +42,9 @@ final class AuthorPostTableCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     // MARK: - Functions
-
+    
     private func addContentView() {
         contentView.addSubview(authorName)
         contentView.addSubview(authorImage)
@@ -52,7 +52,7 @@ final class AuthorPostTableCell: UITableViewCell {
         contentView.addSubview(postImage)
         contentView.addSubview(favoriteButton)
     }
-
+    
     private func subscribeOnFavoriteButton() {
         favoriteButton.rx
             .tapGesture().when(.recognized)
@@ -61,56 +61,62 @@ final class AuthorPostTableCell: UITableViewCell {
             }
             .disposed(by: disposeBag)
     }
-
+    
     private func addConstraints() {
         authorImage.topToSuperview(offset: Constants.AuthorImage.topToSuperViewOffset)
         authorImage.leadingToSuperview(offset: Constants.AuthorImage.leadingToSuperviewOffset)
         authorImage.height(Constants.AuthorImage.heightAndWidthOfsset)
         authorImage.width(Constants.AuthorImage.heightAndWidthOfsset)
-
+        
         authorName.topToBottom(of: authorImage, offset: Constants.AuthorName.topToBottomOffset)
         authorName.centerX(to: authorImage)
         authorName.height(Constants.AuthorName.heightOffset)
-
+        
         postImage.topToBottom(of: authorName, offset: Constants.PostImage.topToBottomOffset)
         postImage.leadingToSuperview()
         postImage.trailingToSuperview()
         postImage.height(UIScreen.main.bounds.width / 2)
-
+        
         descriptionText.topToBottom(of: postImage, offset: Constants.DescriptionText.topToBottomOffset)
         descriptionText.leadingToSuperview(offset: Constants.DescriptionText.leadingAndTrailingToSuperViewOffset)
         descriptionText.trailingToSuperview(offset: Constants.DescriptionText.leadingAndTrailingToSuperViewOffset)
-
-        favoriteButton.topToBottom(of: descriptionText, offset: 5)
+        
+        favoriteButton.topToBottom(of: descriptionText, offset: Constants.FavoriteButton.topToBottomOffset)
         favoriteButton.centerX(to: descriptionText)
-        favoriteButton.bottom(to: contentView, offset: -10)
+        favoriteButton.bottom(to: contentView, offset: Constants.FavoriteButton.bottomOffset)
+
     }
-
+    
     // MARK: - Enums
-
+    
     private enum Constants {
         enum AuthorImage {
             static let topToSuperViewOffset: CGFloat = 16
             static let leadingToSuperviewOffset: CGFloat = 16
             static let heightAndWidthOfsset: CGFloat = 80
         }
-
+        
         enum AuthorName {
             static let topToBottomOffset: CGFloat = 5
             static let heightOffset: CGFloat = 19
         }
-
+        
         enum PostImage {
             static let topToBottomOffset: CGFloat = 20
         }
-
+        
         enum DescriptionText {
             static let topToBottomOffset: CGFloat = 16
             static let leadingAndTrailingToSuperViewOffset: CGFloat = 16
             static let bottomOfsset: CGFloat = -16
         }
-    }
 
+        enum FavoriteButton {
+            static let topToBottomOffset: CGFloat = 5
+            static let bottomOffset: CGFloat = -10
+        }
+    }
+    
     override func prepareForReuse() {
         authorName.text = nil
         authorImage.image = nil
@@ -119,29 +125,33 @@ final class AuthorPostTableCell: UITableViewCell {
         disposeBag = DisposeBag()
         subscribeOnFavoriteButton()
     }
-
+    
     func setupPosts(with authorPosts: FriendsPostViewModel) {
         authorName.text = authorPosts.author
         authorImage.image = authorPosts.avatarImage
         postImage.image = authorPosts.postImage
         descriptionText.text = authorPosts.description
+        changeLikeButton(authorPosts.isLiked)
     }
-
+    
     private func changeLikeButton(_ isLiked: Bool) {
-        UIView.animate(withDuration: 2, delay: 0, options: .curveEaseOut) { [unowned self] in
-            favoriteButton.setImage(isLiked ? .heartImage : .heartFillImage, for: .normal)
-        }
+        favoriteButton.setImage(
+            isLiked
+            ? .heartFillImage
+            : .heartImage,
+            for: .normal
+        )
     }
-
+    
     // MARK: - Properties
-
+    
     // Author name
     private lazy var authorName: UILabel = {
         $0.textColor = .titleColor
         $0.font = .authorHeaderFont
         return $0
     }(UILabel())
-
+    
     // Avatar that will be displayed to the left of the user’s name in the header
     private lazy var authorImage: UIImageView = {
         $0.contentMode = .scaleAspectFill
@@ -149,14 +159,14 @@ final class AuthorPostTableCell: UITableViewCell {
         $0.layer.cornerRadius = 40
         return $0
     }(UIImageView())
-
+    
     // Post Image
     private lazy var postImage: UIImageView = {
         $0.contentMode = .scaleToFill
         $0.backgroundColor = .textFieldTextColor
         return $0
     }(UIImageView())
-
+    
     // Author post
     private lazy var descriptionText: UILabel = {
         $0.textColor = .titleColor
@@ -165,13 +175,13 @@ final class AuthorPostTableCell: UITableViewCell {
         $0.numberOfLines = 0
         return $0
     }(UILabel())
-
+    
     // Add posts to favorite screen
     private lazy var favoriteButton: UIButton = {
         // TODO: - пока что так, чуть позднее если что переделать
         $0.setImage(.heartImage, for: .normal)
         return $0
     }(UIButton())
-
+    
     private var disposeBag = DisposeBag()
 }
