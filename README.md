@@ -23,7 +23,7 @@
 -    **Face ID/Touch ID**
 -    **GCD**
 
-<p align="center" width="100%">
-<img width="100%" src ="./01.jpg"
-<img width="100%" src ="./02.jpg"
+<p align="center" width="75%">
+<img width="75%" src ="./01.jpg"
+<img width="75%" src ="./02.jpg"
   </p>
