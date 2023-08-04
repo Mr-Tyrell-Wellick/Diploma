@@ -13,12 +13,12 @@ protocol SignUpInteractable: Interactable {
 }
 
 protocol SignUpViewControllable: ViewControllable {
-
+    
 }
 
 final class SignUpRouter: ViewableRouter<SignUpInteractable,SignUpViewControllable>,
-                            SignUpRouting {
-
+                          SignUpRouting {
+    
     override init(interactor: SignUpInteractable, viewController: SignUpViewControllable) {
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self

@@ -9,11 +9,9 @@ import RIBs
 
 protocol PhotoInteractable: Interactable {
     var router: PhotoRouting? { get set }
-    
 }
 
 protocol PhotoViewContollable: ViewControllable {
-    
 }
 
 final class PhotoRouter: ViewableRouter<PhotoInteractable, PhotoViewContollable>, PhotoRouting {

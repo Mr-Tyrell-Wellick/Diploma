@@ -12,7 +12,6 @@ protocol KeychainService {
     func load(key: String) -> Data?
 }
 
-
 extension KeychainService {
     func save(key: String = "com.diploma.credentials", data: Data) -> OSStatus {
         save(key: key, data: data)

@@ -25,7 +25,7 @@ protocol LoggedOutPresentable: Presentable {
     func showLoadingIndicator(_ show: Bool)
     func fillCredentials(_ credentialModel: KeychainCredentialsModel)
     func configureBiometryButton(_ isEnabled: Bool)
-
+    
     var listener: LoggedOutViewControllerListener? { get set }
 }
 
@@ -33,12 +33,11 @@ protocol LoggedOutListener: AnyObject {
     func didSuccessLogin()
 }
 
-
 final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, LoggedOutInteractable {
-
+    
     weak var router: LoggedOutRouting?
     weak var listener: LoggedOutListener?
-
+    
     init(
         presenter: LoggedOutPresentable,
         biometryAuthenticationService: BiometryAuthenticationService,
@@ -53,7 +52,7 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
         super.init(presenter: presenter)
         presenter.listener = self
     }
-
+    
     override func didBecomeActive() {
         logActivate()
         subscribeOnBiometry()
@@ -61,11 +60,11 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
         subscribeOnLogIn()
         subscribeOnUiReady()
     }
-
+    
     override func willResignActive() {
         logDeactivate()
     }
-
+    
     private func subscribeOnUiReady() {
         uiReady
             .filter { $0 }
@@ -109,7 +108,7 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
             }
             .disposeOnDeactivate(interactor: self)
     }
-
+    
     private func subscribeOnBiometry() {
         biometryValue
             .filter { $0 }
@@ -157,7 +156,7 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
             }
             .disposeOnDeactivate(interactor: self)
     }
-
+    
     private func subscribeOnLogIn() {
         Observable
             .combineLatest(logInAction, uiReady)
@@ -199,7 +198,7 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
             }
             .disposeOnDeactivate(interactor: self)
     }
-
+    
     private func handleBiometryError(_ error: Error) {
         guard let error = error as? BiometryAuthError else {
             return
@@ -209,7 +208,7 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
             userDefaults.setIsBiometryEnabled(false)
         }
     }
-
+    
     private func subscribeOnSignUp() {
         signUpAction
             .filter { $0 }
@@ -220,17 +219,17 @@ final class LoggedOutInteractor: PresentableInteractor<LoggedOutPresentable>, Lo
             }
             .disposeOnDeactivate(interactor: self)
     }
-
+    
     private func handleAuthError(_ error: Error) {
         guard let error = error as? FirebaseAuthenticationServiceError else { return }
         print("error: \(error.localizedDescription)")
     }
-
+    
     private let biometryAuthenticationService: BiometryAuthenticationService
     private let firebaseAuthentication: FirebaseAuthenticationService
     private let keychainService: KeychainService
     private let userDefaults: UserDefaultsMutableStorage
-
+    
     private let uiReady = BehaviorRelay<Bool>(value: false)
     private let biometryValue = BehaviorRelay<Bool>(value: false)
     private let signUpAction = BehaviorRelay<Bool>(value: false)
@@ -243,11 +242,11 @@ extension LoggedOutInteractor: LoggedOutViewControllerListener {
     func didTapBiometry() {
         biometryValue.accept(true)
     }
-
+    
     func didTapSignUp() {
         signUpAction.accept(true)
     }
-
+    
     func didTapLogIn(_ model: LoginCredentialsModel) {
         logInAction.accept(model)
     }
@@ -263,7 +262,7 @@ extension LoggedOutInteractor {
     func signUpDidClose() {
         router?.signUpDidClose()
     }
-
+    
     func closeSignUp() {
         router?.closeSignUp()
     }

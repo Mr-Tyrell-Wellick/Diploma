@@ -65,7 +65,6 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
     }
     
     private func addConstraints() {
-        
         avatar.topToSuperview(offset: Constants.Avatar.topToSuperViewOffset)
         avatar.leadingToSuperview(offset: Constants.Avatar.leadingToSuperViewOffset)
         avatar.width(Constants.Avatar.withAndHeightOffset)

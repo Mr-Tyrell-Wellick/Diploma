@@ -14,7 +14,6 @@ struct SignUpCredentialsModel {
 }
 
 protocol SignUpRouting: ViewableRouting {
-    
 }
 
 protocol SignUpPresentable: Presentable, AlertPresentable {
@@ -44,7 +43,6 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
         super.didBecomeActive()
         logActivate()
         subscribeOnSignUp()
-        
     }
     
     override func willResignActive() {
@@ -73,7 +71,6 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
                     print("success signUp")
                 } else {
                     presenter.showLoadingIndicator(false)
-                    // TODO: handle error
                     print("no success signUp")
                 }
             }
@@ -81,11 +78,6 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
             .flatMapLatest { [unowned self] _ in
                 firebaseAuthenticationService.sendVerificationEmail()
             }
-        
-        
-        // TODO: - внедрить алерт - пользователь зарегистрировался, вылез алерт о необходимости перейти на почту для прохождения верификации. (разобраться какие алерты добавить)
-        
-        
             .bind { [unowned self] sendResult in
                 presenter.showLoadingIndicator(false)
                 if sendResult {
@@ -97,13 +89,11 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
                                 title: "OK",
                                 action: alertOKAction,
                                 style: .standart)
-                                     ]
+                            ]
                         )
                     )
-                    // TODO: показывать алерт, что отправили письмо на почту
                     print("success email send")
                 } else {
-                    // TODO: handle error
                     print("no success email send")
                 }
             }
@@ -111,7 +101,6 @@ final class SignUpInteractor: PresentableInteractor<SignUpPresentable>,
     }
     
     private func handleError(_ error: Error) {
-        
     }
     
     weak var listener: SignUpListener?
@@ -132,7 +121,7 @@ extension SignUpInteractor: SignUpViewControllerListener {
     func didTapSignUp(_ model: SignUpCredentialsModel) {
         signUpAction.accept(model)
     }
-
+    
     func didTapAlertAction(_ action: String) {
         switch action {
         case alertOKAction:
@@ -140,6 +129,4 @@ extension SignUpInteractor: SignUpViewControllerListener {
         default: return
         }
     }
-
-
 }

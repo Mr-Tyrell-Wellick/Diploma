@@ -23,7 +23,11 @@ protocol FavoritesBuildable: Buildable {
 final class FavoritesBuilder: Builder<FavoritesDependency>, FavoritesBuildable {
     func build() -> FavoritesRouting {
         let viewController = FavoritesViewController()
-        let interactor = FavoritesInteractor(presenter: viewController)
+        let interactor = FavoritesInteractor(
+            presenter: viewController,
+            postsService: dependency.postsService,
+            favoritesPostsStream: dependency.favoritesPostsStream
+        )
         return FavoritesRouter(
             interactor: interactor,
             viewController: viewController

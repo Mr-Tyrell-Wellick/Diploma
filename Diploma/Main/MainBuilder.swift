@@ -13,7 +13,6 @@ protocol MainDependecy {
 }
 
 final class MainComponent: EmptyComponent {
-    
 }
 
 protocol MainBuildable: Buildable {

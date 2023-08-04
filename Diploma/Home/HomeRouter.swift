@@ -53,7 +53,12 @@ final class HomeRouter: ViewableRouter<HomeInteractable, HomeViewControllable>, 
             attachChild(profile)
             self.profile = profile
         }
-        viewController.setChild(profile!.viewControllable.uiviewController)
+        if profileNavigationController == nil {
+            profileNavigationController = UINavigationController(
+                rootViewController: profile!.viewControllable.uiviewController
+            )
+        }
+        viewController.setChild(profileNavigationController!)
     }
     
     func routeToFavorites() {
@@ -74,6 +79,7 @@ final class HomeRouter: ViewableRouter<HomeInteractable, HomeViewControllable>, 
     
     private var favoritesNavigationController: UINavigationController?
     private var mainNavigationController: UINavigationController?
+    private var profileNavigationController: UINavigationController?
     
     private let mainBuilder: MainBuildable
     private let profileBuilder: ProfileBuildable

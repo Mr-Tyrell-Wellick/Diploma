@@ -12,7 +12,6 @@ protocol SignUpDependency: EmptyDependency {
 }
 
 final class SignUpComponent: Component<SignUpDependency> {
-    
 }
 
 protocol SignUpBuildable: Buildable {

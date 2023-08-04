@@ -26,7 +26,6 @@ final class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .allScreenBackgroundColor
-        
         addView()
         addConstraints()
         subscribeInSignUp()
@@ -46,11 +45,10 @@ final class SignUpViewController: UIViewController {
         view.addSubview(logoImage)
         view.addSubview(signUpButton)
         view.addSubview(loadingIndicator)
-        
         stackViewTextField.addArrangedSubview(loginTextField)
         stackViewTextField.addArrangedSubview(passwordTextField)
     }
-
+    
     private func subscribeInSignUp() {
         signUpButton
             .rx
@@ -65,7 +63,7 @@ final class SignUpViewController: UIViewController {
                 )
             }.disposed(by: disposeBag)
     }
-
+    
     private func addConstraints() {
         strip.top(to: view, offset: Constants.Strip.topOffset)
         strip.centerXToSuperview()
@@ -75,12 +73,12 @@ final class SignUpViewController: UIViewController {
         signUpLabel.topToBottom(of: strip, offset: Constants.SignUpLabel.topToBottomOffset)
         signUpLabel.leadingToSuperview(offset: Constants.SignUpLabel.leadingAndTrailingToSuperviewOffset)
         signUpLabel.trailingToSuperview(offset: Constants.SignUpLabel.leadingAndTrailingToSuperviewOffset)
-
+        
         logoImage.topToBottom(of: signUpLabel, offset: Constants.LogoImage.topToBottomOffset)
         logoImage.centerX(to: stackViewTextField)
         logoImage.height(Constants.LogoImage.heightOffset)
         logoImage.width(Constants.LogoImage.widthOffset)
-
+        
         loadingIndicator.topToBottom(of: logoImage, offset: Constants.LoadingIndicator.topToBottomOffset)
         loadingIndicator.centerXToSuperview()
         
@@ -94,7 +92,7 @@ final class SignUpViewController: UIViewController {
         passwordTextField.leadingToSuperview()
         passwordTextField.trailingToSuperview()
         passwordTextField.centerX(to: view)
-
+        
         signUpButton.topToBottom(of: passwordTextField, offset: Constants.SignUpButton.topToBottomOffset)
         signUpButton.height(Constants.SignUpButton.heightOffset)
         signUpButton.leadingToSuperview(offset: Constants.SignUpButton.leadingAndTrailingToSuperview)
@@ -104,7 +102,6 @@ final class SignUpViewController: UIViewController {
     // MARK: - Enums
     
     private enum Constants {
-        
         enum Strip {
             static let topOffset: CGFloat = 30
             static let widthOffset: CGFloat = 50
@@ -115,10 +112,9 @@ final class SignUpViewController: UIViewController {
             static let topToBottomOffset: CGFloat = 70
             static let leadingAndTrailingToSuperviewOffset: CGFloat = 30
         }
-
+        
         enum LoadingIndicator {
             static let topToBottomOffset: CGFloat = 25
-
         }
         
         enum LogoImage {
@@ -126,7 +122,6 @@ final class SignUpViewController: UIViewController {
             static let heightOffset: CGFloat = 80
             static let widthOffset: CGFloat = 66
         }
-        
         
         enum StackViewTextField {
             static let leadingAndTrailingOffset: CGFloat = 16
@@ -138,7 +133,7 @@ final class SignUpViewController: UIViewController {
             static let leadingAndTrailingToSuperview: CGFloat = 35
         }
     }
-
+    
     // MARK: - Properties
     
     // stackView
@@ -233,7 +228,7 @@ extension SignUpViewController: SignUpPresentable {
         ? loadingIndicator.startAnimating()
         : loadingIndicator.stopAnimating()
     }
-
+    
     func didTapAlertAction(_ action: String) {
         listener?.didTapAlertAction(action)
     }

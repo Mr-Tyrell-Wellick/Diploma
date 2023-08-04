@@ -8,9 +8,9 @@
 import Foundation
 
 struct DataGenerator {
-
+    
     // MARK: - Friends posts
-
+    
     static  func getFriendsPosts() -> [Post] {
         [
             Post(
@@ -63,9 +63,9 @@ struct DataGenerator {
             )
         ]
     }
-
+    
     // MARK: - My posts
-
+    
     static func getMyPosts() -> [Post] {
         [
             Post(
@@ -94,9 +94,9 @@ struct DataGenerator {
             )
         ]
     }
-
+    
     // MARK: - My Photos
-
+    
     static func getPhotoGalleryPosts() -> [PhotoModel] {
         [
             PhotoModel(galleryImage: .galleryOneImage),

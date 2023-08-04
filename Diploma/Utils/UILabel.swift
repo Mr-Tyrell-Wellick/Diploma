@@ -8,7 +8,7 @@
 import UIKit
 
 extension UILabel {
-
+    
     func setupLabelAndAttributes(
         allText: String,
         highLighthedText: String,

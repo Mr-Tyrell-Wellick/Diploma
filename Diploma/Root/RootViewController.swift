@@ -9,19 +9,16 @@ import RIBs
 import UIKit
 
 protocol RootViewControllerListener: AnyObject {
-
 }
 
 final class RootViewController: UIViewController {
-
+    
     weak var listener: RootViewControllerListener?
-
 }
 
 // MARK: - RootPresentable
 
 extension RootViewController: RootPresentable {
-
 }
 
 // MARK: - RootViewControllable

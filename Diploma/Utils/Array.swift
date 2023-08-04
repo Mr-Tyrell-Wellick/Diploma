@@ -27,3 +27,30 @@ extension Array where Element == PostModel {
         }
     }
 }
+
+// MARK: - Post
+
+extension Array where Element == Post {
+    func mapToFriendsViewModel() -> [PostsViewModel] {
+        map {
+            .init(
+                headerTitle: $0.postTitle,
+                author: $0.author,
+                description: $0.description,
+                postImage: $0.postImage,
+                avatarImage: $0.avatarImage,
+                postId: $0.postId,
+                isLiked: $0.isFavorite
+            )
+        }
+    }
+}
+
+// MARK: - safely index
+
+extension Array {
+    func elementAt(_ index: UInt) -> Element? {
+        guard index < count else { return nil }
+        return self[Int(index)]
+    }
+}

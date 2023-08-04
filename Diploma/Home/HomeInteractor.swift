@@ -57,13 +57,13 @@ final class HomeInteractor: PresentableInteractor<HomePresentable>, HomeInteract
     override func willResignActive() {
         logDeactivate()
     }
-
+    
     private func setupIfNeeded() -> Completable {
         guard !UserDefaults.standard.bool(forKey: "isFirstLoad") else { return .empty() }
         UserDefaults.standard.set(true, forKey: "isFirstLoad")
         return coreDataService.initStorage()
     }
-
+    
     private func subscribeOnUiReady() {
         uiReady.filter { $0 }
             .bind { [unowned self] _ in
@@ -90,7 +90,7 @@ final class HomeInteractor: PresentableInteractor<HomePresentable>, HomeInteract
             }
             .disposeOnDeactivate(interactor: self)
     }
-
+    
     private let coreDataService: CoreDataService
     private let uiReady = BehaviorRelay<Bool>(value: false)
 }
@@ -113,4 +113,3 @@ extension HomeInteractor: HomeViewContollerListener {
         uiReady.accept(true)
     }
 }
-

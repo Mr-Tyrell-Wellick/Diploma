@@ -18,8 +18,9 @@ protocol PostsService {
 }
 
 final class PostsServiceImpl: PostsService {
-
-    init(friendsPostsStream: PostsMutableStream,
+    
+    init(
+        friendsPostsStream: PostsMutableStream,
          myPostsStream: PostsMutableStream,
          favoritesPostsStream: PostsMutableStream,
          coreDataService: CoreDataService
@@ -44,7 +45,7 @@ final class PostsServiceImpl: PostsService {
                 })
         }
     }
-
+    
     func getMyPosts() -> Completable {
         .create { [unowned self] observer in
             let predicate = NSPredicate(
@@ -59,7 +60,7 @@ final class PostsServiceImpl: PostsService {
                 })
         }
     }
-
+    
     func getFavoritesPosts() -> Completable {
         .create { [unowned self] observer in
             let predicate = NSPredicate(
@@ -74,15 +75,15 @@ final class PostsServiceImpl: PostsService {
                 })
         }
     }
-
+    
     func likePost(postId: Int) {
         likeDislikePost(postId: postId, setLikeTo: true)
     }
-
+    
     func dislikePost(postId: Int) {
         likeDislikePost(postId: postId, setLikeTo: false)
     }
-
+    
     private func likeDislikePost(postId: Int, setLikeTo:Bool) {
         let filterPredicate = NSPredicate(
             format: "%K = %@ AND %K != %@",
@@ -99,10 +100,11 @@ final class PostsServiceImpl: PostsService {
                 propertiesToUpdate: propertiesToUpdate
             )
             .andThen(getFriendsPosts())
+            .andThen(getFavoritesPosts())
             .subscribe()
             .disposed(by: disposeBag)
     }
-
+    
     private let friendsPostsStream: PostsMutableStream
     private let myPostsStream: PostsMutableStream
     private let favoritesPostsStream: PostsMutableStream

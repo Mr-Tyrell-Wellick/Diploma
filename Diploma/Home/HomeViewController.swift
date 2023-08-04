@@ -34,46 +34,42 @@ final class HomeViewController: UIViewController {
         addConstraints()
         listener?.didLoad()
     }
-
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
-
-
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         tabBar.layer.shadowColor = UIColor.shadowTabBarColor.cgColor
     }
-
+    
     // MARK: - Functions
     
     private func addView() {
         view.addSubview(tabBar)
     }
-
+    
     private func addConstraints() {
         tabBar.bottomToSuperview(usingSafeArea: true)
         tabBar.leftToSuperview()
         tabBar.rightToSuperview()
         tabBar.height(Constants.TAbBar.heightOffset)
     }
-
+    
     private func setupChildConstraints() {
-
-        
         child?.view.topToSuperview()
         child?.view.leadingToSuperview()
         child?.view.trailingToSuperview()
         child?.view.bottomToTop(of: tabBar)
     }
-
+    
     private enum Constants {
         enum TAbBar {
             static let heightOffset: CGFloat = 49
         }
     }
-
+    
     // MARK: - Properties
     
     private lazy var tabBar: UITabBar = {
@@ -85,12 +81,10 @@ final class HomeViewController: UIViewController {
         $0.delegate = self
         return $0
     }(UITabBar())
-
+    
     private let disposeBag = DisposeBag()
     private weak var child: UIViewController?
-
 }
-
 
 // MARK: - UITabBarDelegate
 
@@ -128,7 +122,7 @@ extension HomeViewController: HomePresentable {
 // MARK: - HomeViewControllable
 
 extension HomeViewController: HomeViewControllable {
-
+    
     func setChild(_ child: UIViewController) {
         self.child?.removeChildFromParent()
         self.child = child

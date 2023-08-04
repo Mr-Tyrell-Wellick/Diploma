@@ -16,6 +16,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         addSubview(galleryImage)
         addConstraints()
+        setup()
     }
     
     required init?(coder: NSCoder) {
@@ -27,11 +28,16 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     private func addConstraints()  {
         galleryImage.edges(to: self)
     }
+
+    func setup() {
+        clipsToBounds = true
+        layer.cornerRadius = 6
+    }
     
     func configurePhoto(with photoImage: UIImage?) {
         galleryImage.image = photoImage
     }
-    
+
     // MARK: - Properties
     
     private lazy var galleryImage: UIImageView = {

@@ -12,7 +12,6 @@ protocol MainInteractable: Interactable {
 }
 
 protocol MainViewControllable: ViewControllable {
-    
 }
 
 final class MainRouter: ViewableRouter<MainInteractable, MainViewControllable>, MainRouting {

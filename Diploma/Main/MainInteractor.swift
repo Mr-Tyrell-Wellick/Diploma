@@ -11,13 +11,13 @@ import RxSwift
 import RxRelay
 
 protocol MainRouting: ViewableRouting {
-    
 }
 
 protocol MainPresentable: Presentable {
-
-    func showFriendsPosts(_ friendsViewModel: [FriendsPostViewModel])
-
+    
+    func showFriendsPosts(_ friendsViewModel: [PostsViewModel])
+    func showFriendsAvatars(_ friendsAvatarsViewModel: [MainFriendsViewViewModel])
+    
     var listener: MainViewControllerListener? { get set }
 }
 
@@ -40,12 +40,13 @@ final class MainInteractor: PresentableInteractor<MainPresentable>, MainInteract
         logActivate()
         subscribeOnUiReady()
         subscribeOnPostsStream()
+        subscribeOnDidTapLike()
     }
     
     override func willResignActive() {
         logDeactivate()
     }
-
+    
     private func subscribeOnUiReady() {
         uiReady
             .filter { $0 }
@@ -55,7 +56,7 @@ final class MainInteractor: PresentableInteractor<MainPresentable>, MainInteract
             .subscribe()
             .disposeOnDeactivate(interactor: self)
     }
-
+    
     private func subscribeOnPostsStream() {
         Observable.combineLatest(
             friendsPostsStream
@@ -64,45 +65,51 @@ final class MainInteractor: PresentableInteractor<MainPresentable>, MainInteract
             uiReady
         )
         .filter { $0.1 }
-        .map { [unowned self] posts, _ in
-            createPostsViewModel(posts)
+        .map { posts, _ -> ([PostsViewModel], [MainFriendsViewViewModel]) in
+            let viewModel = posts.mapToFriendsViewModel()
+            return (
+                viewModel,
+                viewModel.map { MainFriendsViewViewModel(image: $0.avatarImage ?? UIImage()) }
+            )
         }
-        .bind { [unowned self] friendsPostViewModel in
+        .bind { [unowned self] friendsPostViewModel, avatarsViewModel in
             presenter.showFriendsPosts(friendsPostViewModel)
+            presenter.showFriendsAvatars(avatarsViewModel)
         }
         .disposeOnDeactivate(interactor: self)
     }
-
-    private func createPostsViewModel(_ posts: [Post]) -> [FriendsPostViewModel] {
-        posts.map {
-            .init(
-                postTitle: $0.postTitle,
-                author: $0.author,
-                description: $0.description,
-                postImage: $0.postImage,
-                avatarImage: $0.avatarImage,
-                postId: $0.postId,
-                isLiked: $0.isFavorite
-            )
-        }
+    
+    private func subscribeOnDidTapLike() {
+        didTapLike
+            .compactMap { $0 }
+            .withLatestFrom(friendsPostsStream.posts)
+            .compactMap { [unowned self] posts -> Post? in
+                guard let post = posts.first(where: { $0.postId == didTapLike.value! }) else { return nil }
+                return post
+            }
+            .bind { [unowned self] post in
+                post.isFavorite
+                ? postsService.dislikePost(postId: post.postId)
+                : postsService.likePost(postId: post.postId)
+            }
+            .disposeOnDeactivate(interactor: self)
     }
-
+    
     private let postsService: PostsService
     private let friendsPostsStream: PostsStream
     private let uiReady = BehaviorRelay<Bool>(value: false)
+    private let didTapLike = BehaviorRelay<Int?>(value: nil)
 }
 
 // MARK: - MainViewControllerListener
 
 extension MainInteractor: MainViewControllerListener {
-
+    
     func viewDidLoad() {
         uiReady.accept(true)
     }
-
-    func didTapLikeButton(postId: Int, isLiked: Bool) {
-        isLiked
-        ? postsService.dislikePost(postId: postId)
-        : postsService.likePost(postId: postId)
+    
+    func didTapLikeButton(postId: Int) {
+        didTapLike.accept(postId)
     }
 }

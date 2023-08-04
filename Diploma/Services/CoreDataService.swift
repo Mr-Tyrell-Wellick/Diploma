@@ -20,14 +20,16 @@ protocol CoreDataService {
         filterPredicate: NSPredicate,
         propertiesToUpdate: [AnyHashable: Any]
     ) -> Completable
+    func fetchPhotos() -> Single<[UIImage]>
 }
 
 enum CoreDataError: Error {
     case fetchError
+    case genericMapResultError
 }
 
 final class CoreDataServiceImpl: CoreDataService {
-
+    
     func update<T: NSManagedObject>(
         entity: T.Type,
         filterPredicate: NSPredicate,
@@ -53,7 +55,7 @@ final class CoreDataServiceImpl: CoreDataService {
             return Disposables.create {}
         }
     }
-
+    
     func fetchMatching(predicate: NSPredicate) -> Single<[Post]> {
         .create { [unowned self] observer in
             backgroundContext.perform { [self] in
@@ -76,7 +78,29 @@ final class CoreDataServiceImpl: CoreDataService {
             return Disposables.create {}
         }
     }
-
+    
+    func fetchPhotos() -> Single<[UIImage]> {
+        .create { [unowned self] observer in
+            backgroundContext.perform { [self] in
+                let fetchRequest = PhotoCoreDataModel.fetchRequest()
+                fetchRequest.sortDescriptors = [NSSortDescriptor(key: "image", ascending: true)]
+                do {
+                    let result = try backgroundContext.fetch(fetchRequest)
+                    let mappedResult = result.map { UIImage(data: $0.image) ?? UIImage() }
+                    DispatchQueue.main.async {
+                        observer(.success(mappedResult))
+                    }
+                } catch {
+                    print(observer(.failure(error)))
+                    DispatchQueue.main.async {
+                        observer(.failure(error))
+                    }
+                }
+            }
+            return Disposables.create {}
+        }
+    }
+    
     private func insertPost(_ initialPost: Post) -> Completable {
         .create { [unowned self] observer in
             backgroundContext.perform { [unowned self] in
@@ -90,7 +114,7 @@ final class CoreDataServiceImpl: CoreDataService {
             return Disposables.create {}
         }
     }
-
+    
     private func deleteBy(id: Int) -> Completable {
         .create { [unowned self] observer in
             backgroundContext.perform { [self] in
@@ -116,7 +140,7 @@ final class CoreDataServiceImpl: CoreDataService {
             return Disposables.create {}
         }
     }
-
+    
     func initStorage() -> Completable {
         .create { [unowned self] observer in
             let dispatchGroup = DispatchGroup()
@@ -125,12 +149,23 @@ final class CoreDataServiceImpl: CoreDataService {
             initialPosts.append(
                 contentsOf: DataGenerator.getMyPosts()
             )
-
+            
             initialPosts.forEach { initialPost in
                 backgroundQueue.async(group: dispatchGroup) {
                     self.backgroundContext.perform { [unowned self] in
                         let post = PostModel(context: backgroundContext)
                         post.fillFromSimplePost(initialPost)
+                        saveBackgroundContext()
+                    }
+                }
+            }
+            
+            let initialPhotos = DataGenerator.getPhotoGalleryPosts()
+            initialPhotos.forEach { initialPhoto in
+                backgroundQueue.async(group: dispatchGroup) {
+                    self.backgroundContext.perform { [unowned self] in
+                        let photo = PhotoCoreDataModel(context: backgroundContext)
+                        photo.image = initialPhoto.galleryImage.jpegData(compressionQuality: 0.1) ?? Data()
                         saveBackgroundContext()
                     }
                 }
@@ -141,7 +176,7 @@ final class CoreDataServiceImpl: CoreDataService {
             return Disposables.create {}
         }
     }
-
+    
     func fetchAllPosts() -> Single<[Post]> {
         .create { [unowned self] observer in
             let fetchRequest = PostModel.fetchRequest()
@@ -160,7 +195,7 @@ final class CoreDataServiceImpl: CoreDataService {
             return Disposables.create {}
         }
     }
-
+    
     private func saveBackgroundContext() {
         let context = backgroundContext
         if context.hasChanges {
@@ -172,12 +207,12 @@ final class CoreDataServiceImpl: CoreDataService {
             }
         }
     }
-
+    
     private lazy var backgroundContext: NSManagedObjectContext = {
         let context = container.newBackgroundContext()
         return context
     }()
-
+    
     private lazy var container: NSPersistentContainer = {
         $0.loadPersistentStores { (storeDescription, error) in
             if let error = error as NSError? {
@@ -186,10 +221,9 @@ final class CoreDataServiceImpl: CoreDataService {
         }
         return $0
     }(NSPersistentContainer(name: "Diploma"))
-
+    
     private let backgroundQueue = DispatchQueue(
         label: "CoreDataSelfCreatedQueue",
         qos: .default
     )
 }
-

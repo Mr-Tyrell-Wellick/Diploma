@@ -27,9 +27,7 @@ extension UIViewController {
         view.removeFromSuperview()
         removeFromParent()
     }
-    
-    
-    
+
     // MARK: - NavigationTabBar
     
     func setupNavigationBar(_ title: String) {
@@ -46,5 +44,4 @@ extension UIViewController {
     private func enableLargeTitles() {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
-    
 }

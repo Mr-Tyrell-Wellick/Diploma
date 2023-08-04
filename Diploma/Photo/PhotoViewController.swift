@@ -12,7 +12,8 @@ import RxSwift
 import RxGesture
 
 protocol PhotoViewControllerListener: AnyObject {
-
+    func viewDidAppear()
+    func viewDidDissappear()
 }
 
 final class PhotoViewController: UIViewController {
@@ -24,18 +25,31 @@ final class PhotoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
+        view.backgroundColor = .allScreenBackgroundColor
         addViews()
         addConstraints()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        listener?.viewDidAppear()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        listener?.viewDidDissappear()
     }
 
     // MARK: - Functions
 
     private func addViews() {
         view.addSubview(verticalCollectionView)
+        view.addSubview(loadingIndicator)
     }
 
     private func addConstraints() {
         verticalCollectionView.edgesToSuperview()
+        loadingIndicator.center = view.center
     }
 
     private func setupNavBar() {
@@ -60,13 +74,21 @@ final class PhotoViewController: UIViewController {
         $0.showsVerticalScrollIndicator = false
         $0.dataSource = self
         $0.delegate = self
-        $0.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: "PhotoCollectionViewCellID")
-        $0.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "DefaultCellID")
+        $0.registerCell(PhotoCollectionViewCell.self)
         return $0
     }(UICollectionView(frame: .zero, collectionViewLayout: self.verticalLayout))
 
+    // Loading Indacatior
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        $0.hidesWhenStopped = true
+        $0.isHidden = true
+        return $0
+    }(UIActivityIndicatorView())
+
     // Сell size in PhotoVC
     private let itemSizeOfVC = (UIScreen.main.bounds.width - 32)/3
+    private var viewModel: [PhotoGalleryViewModel] = []
+
 }
 
 // MARK: - UICollectionViewDataSource
@@ -77,24 +99,15 @@ extension PhotoViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return 20
+        return viewModel.count
     }
 
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "PhotoCollectionViewCellID",
-            for: indexPath
-        ) as? PhotoCollectionViewCell else {
-            return collectionView.dequeueReusableCell(
-                withReuseIdentifier: "DefaultCellID",
-                for: indexPath
-            )
-        }
-//        let post = photoPost[indexPath.item]
-//        cell.configurePhoto(with: post.galleryImage)
+        let cell = collectionView.reusableCell(PhotoCollectionViewCell.self, indexPath: indexPath)
+        cell.configurePhoto(with: viewModel[indexPath.row].image)
         return cell
     }
 }
@@ -103,7 +116,11 @@ extension PhotoViewController: UICollectionViewDataSource {
 
 extension PhotoViewController: UICollectionViewDelegateFlowLayout {
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         return CGSize(width: itemSizeOfVC, height: itemSizeOfVC)
     }
 }
@@ -111,11 +128,18 @@ extension PhotoViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - PhotoPresentable
 
 extension PhotoViewController: PhotoPresentable {
-
+    func showViewModel(_ viewModel: [PhotoGalleryViewModel]) {
+        self.viewModel = viewModel
+        verticalCollectionView.reloadData()
+    }
+    func showLoadingIndicator(_ show: Bool) {
+        show
+        ? loadingIndicator.startAnimating()
+        : loadingIndicator.stopAnimating()
+    }
 }
 
 // MARK: - PhotoViewContollable
 
 extension PhotoViewController: PhotoViewContollable {
-    
 }

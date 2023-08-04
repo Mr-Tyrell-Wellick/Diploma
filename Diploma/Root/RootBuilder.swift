@@ -16,15 +16,12 @@ final class RootComponent: Component<EmptyDependency> {
     
     var userMutableStream: UserMutableStream
     var keychainService: KeychainService
-    
 }
 
 extension RootComponent: HomeDependency {
-    
 }
 
 extension RootComponent: LoggedOutDependency {
-    
 }
 
 protocol RootBuildable: Buildable {

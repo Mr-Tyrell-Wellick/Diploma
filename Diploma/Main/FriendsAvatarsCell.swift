@@ -1,5 +1,5 @@
 //
-//  MainCell.swift
+//  FriendsAvatarsCell.swift
 //  Diploma
 //
 //  Created by Ульви Пашаев on 13.07.2023.
@@ -8,7 +8,7 @@
 import UIKit
 import TinyConstraints
 
-final class MainCell: UICollectionViewCell {
+final class FriendsAvatarsCell: UICollectionViewCell {
     
     // MARK: - Init
     
@@ -21,9 +21,9 @@ final class MainCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     // MARK: - Functions
-
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         setup()
@@ -38,27 +38,27 @@ final class MainCell: UICollectionViewCell {
         layer.borderColor = UIColor.borderUserColor.cgColor
         layer.borderWidth = 2.0
     }
-
-    // TODO: - переделать
-//    func configure(with avatarImage: UIImage?) {
-//        authorImage.image = avatarImage
-//    }
-
+    
+    func configure(with avatarImage: UIImage) {
+        authorImage.image = avatarImage
+    }
+    
     private func addConstraints() {
-        authorImage.top(to: self, offset: Constants.AuthorImage.topOffset)
-        authorImage.leading(to: self, offset: Constants.AuthorImage.leadindOffset)
-        authorImage.trailing(to: self, offset: Constants.AuthorImage.trailingOffset)
-        authorImage.bottom(to: self, offset: Constants.AuthorImage.bottomOffset)
+        authorImage.edgesToSuperview(
+            insets: UIEdgeInsets(
+                top: Constants.AuthorImage.allEdgeOffset,
+                left: Constants.AuthorImage.allEdgeOffset,
+                bottom: Constants.AuthorImage.allEdgeOffset,
+                right: Constants.AuthorImage.allEdgeOffset
+            )
+        )
     }
     
     // MARK: - Enums
     
     private enum Constants {
         enum AuthorImage {
-            static let leadindOffset: CGFloat = 4
-            static let trailingOffset: CGFloat = -4
-            static let topOffset: CGFloat = 4
-            static let bottomOffset: CGFloat = -4
+            static let allEdgeOffset: CGFloat = 4
         }
     }
     

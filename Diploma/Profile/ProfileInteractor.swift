@@ -11,13 +11,15 @@ import RxSwift
 import RxRelay
 
 protocol ProfileRouting: ViewableRouting {
-    
+    func openPhotosScreen()
 }
 
 protocol ProfilePresentable: Presentable {
-
-    func showPosts(_ viewModel: [PostViewModel])
+    
+    func showPosts(_ viewModel: [PostsViewModel])
+    func showPhotos(_ viewModel: [ProfilePhotoGalleryViewModel])
     func showStatus(_ status: String?)
+    func showLoadingIndicator(_ show: Bool)
 
     var listener: ProfileViewContollerListener? { get set }
 }
@@ -29,10 +31,12 @@ final class ProfileInteractor: PresentableInteractor <ProfilePresentable>, Profi
     init(
         presenter: ProfilePresentable,
         postsService: PostsService,
-        myPostsStream: PostsStream
+        myPostsStream: PostsStream,
+        photoService: PhotoService
     ) {
         self.postsService = postsService
         self.myPostsStream = myPostsStream
+        self.photoService = photoService
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -46,17 +50,21 @@ final class ProfileInteractor: PresentableInteractor <ProfilePresentable>, Profi
     override func willResignActive() {
         logDeactivate()
     }
-
+    
     private func subscribeOnUiReady() {
         uiReady
             .filter { $0 }
+            .do(onNext: { [unowned self] _ in
+                presenter.showLoadingIndicator(true)
+            })
             .flatMapLatest { [unowned self] _ in
-                postsService.getMyPosts()
+                getPhotos()
+                return postsService.getMyPosts()
             }
             .subscribe()
             .disposeOnDeactivate(interactor: self)
     }
-
+    
     private func subscribeOnPostsStream() {
         Observable.combineLatest(
             myPostsStream
@@ -70,14 +78,27 @@ final class ProfileInteractor: PresentableInteractor <ProfilePresentable>, Profi
         }
         .bind { [unowned self] postsViewModel in
             presenter.showPosts(postsViewModel)
+            presenter.showLoadingIndicator(false)
         }
         .disposeOnDeactivate(interactor: self)
     }
 
-    private func createPostsViewModel(_ posts: [Post]) -> [PostViewModel] {
+    private func getPhotos() {
+        photoService
+            .getPhotos()
+            .asObservable()
+            .map { $0.map { ProfilePhotoGalleryViewModel(image: $0) } }
+            .bind { [unowned self] viewModel in
+                presenter.showPhotos(viewModel)
+                presenter.showLoadingIndicator(false)
+            }
+            .disposeOnDeactivate(interactor: self)
+    }
+
+    private func createPostsViewModel(_ posts: [Post]) -> [PostsViewModel] {
         posts.map {
             .init(
-                postTitle: $0.postTitle,
+                headerTitle: $0.postTitle,
                 author: $0.author,
                 description: $0.description,
                 postImage: $0.postImage,
@@ -86,21 +107,26 @@ final class ProfileInteractor: PresentableInteractor <ProfilePresentable>, Profi
             )
         }
     }
-
+    
     private let postsService: PostsService
     private let myPostsStream: PostsStream
+    private let photoService: PhotoService
     private let uiReady = BehaviorRelay<Bool>(value: false)
 }
 
 // MARK: - ProfileViewControllerListener
 
 extension ProfileInteractor: ProfileViewContollerListener {
-
+    
     func viewDidLoad() {
         uiReady.accept(true)
     }
-
+    
     func didTapSetStatus(_ newStatus: String?) {
         presenter.showStatus(newStatus)
+    }
+    
+    func didTapOpenPhotos() {
+        router?.openPhotosScreen()
     }
 }

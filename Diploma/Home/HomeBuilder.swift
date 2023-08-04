@@ -8,7 +8,6 @@
 import RIBs
 
 protocol HomeDependency: EmptyDependency {
-    
 }
 
 final class HomeComponent: Component<EmptyDependency> {
@@ -30,7 +29,6 @@ final class HomeComponent: Component<EmptyDependency> {
             favoritesPostsStream: favoritesPostsStream,
             coreDataService: coreDataService
         )
-        
         super.init(dependency: dependency)
     }
     
@@ -39,7 +37,6 @@ final class HomeComponent: Component<EmptyDependency> {
     var myPostsStream: PostsStream
     var favoritesPostsStream: PostsStream
     var coreDataService: CoreDataService
-    
 }
 
 extension HomeComponent: MainDependecy {
@@ -50,7 +47,6 @@ extension HomeComponent: ProfileDependency {
 
 extension HomeComponent: FavoritesDependency {
 }
-
 
 protocol HomeBuildable: Buildable {
     func build(with listener: HomeListener) -> HomeRouting

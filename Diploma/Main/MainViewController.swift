@@ -13,7 +13,7 @@ import RxGesture
 
 protocol MainViewControllerListener: AnyObject {
     func viewDidLoad()
-    func didTapLikeButton(postId: Int, isLiked: Bool)
+    func didTapLikeButton(postId: Int)
 }
 
 final class MainViewController: UIViewController {
@@ -39,7 +39,7 @@ final class MainViewController: UIViewController {
     private func addConstraints() {
         tableView.edgesToSuperview()
     }
-
+    
     // MARK: - Properties
     
     private lazy var tableView: UITableView = {
@@ -50,22 +50,22 @@ final class MainViewController: UIViewController {
         $0.sectionFooterHeight = 0
         $0.rowHeight = UITableView.automaticDimension
         $0.showsVerticalScrollIndicator = false
-        $0.registerCell(AuthorPostTableCell.self)
+        $0.registerCell(PostTableCell.self)
         return $0
     }(UITableView(frame: .zero, style: .grouped))
     
-    private lazy var friendsView: MainFriendsViewPresentable = {
+    private lazy var friendsAvatarView: MainFriendsViewPresentable = {
         $0
     }(MainFriendsView())
-
-    private var friendsPostViewModel: [FriendsPostViewModel] = []
+    
+    private var postViewModel: [PostsViewModel] = []
 }
 // MARK: - UITableViewDelegate
 
 extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
-            return friendsView
+            return friendsAvatarView
         } else {
             return nil
         }
@@ -76,7 +76,7 @@ extension MainViewController: UITableViewDelegate {
         heightForHeaderInSection section: Int
     ) -> CGFloat {
         if section == 0 {
-            return UITableView.automaticDimension
+            return 87
         } else {
             return 0
         }
@@ -91,9 +91,8 @@ extension MainViewController: UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        return friendsPostViewModel.count
+        return postViewModel.count
     }
-
     
     func numberOfSections(in tableView: UITableView) -> Int {
         1
@@ -113,9 +112,14 @@ extension MainViewController: UITableViewDataSource {
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        let cell = tableView.dequeuCell(AuthorPostTableCell.self, indexPath: indexPath)
+        let cell = tableView.dequeuCell(PostTableCell.self, indexPath: indexPath)
         cell.listener = self
-        cell.setupPosts(with: friendsPostViewModel[indexPath.row])
+        cell.setupPosts(
+            with: postViewModel[indexPath.row],
+            isAvatarHidden: false,
+            isAuthorNameHidden: false,
+            isHeaderPostHidden: true
+        )
         return cell
     }
     
@@ -128,9 +132,13 @@ extension MainViewController: UITableViewDataSource {
 // MARK: - MainPresentable
 
 extension MainViewController: MainPresentable {
-    func showFriendsPosts(_ friendsViewModel: [FriendsPostViewModel]) {
-        friendsPostViewModel = friendsViewModel
+    func showFriendsPosts(_ friendsViewModel: [PostsViewModel]) {
+        postViewModel = friendsViewModel
         tableView.reloadData()
+    }
+    
+    func showFriendsAvatars(_ friendsAvatarsViewModel: [MainFriendsViewViewModel]) {
+        friendsAvatarView.showViewModel(friendsAvatarsViewModel)
     }
 }
 
@@ -140,10 +148,8 @@ extension MainViewController: MainViewControllable {
     
 }
 
-extension MainViewController: AuthorPostListener {
-    func didTapLike(_ at: CGPoint) {
-        guard let indexPath = tableView.indexPathForRow(at: at) else { return }
-        let post = friendsPostViewModel[indexPath.row]
-        listener?.didTapLikeButton(postId: post.postId, isLiked: post.isLiked)
+extension MainViewController: PostListener {
+    func didTapLike(_ postId: Int) {
+        listener?.didTapLikeButton(postId: postId)
     }
 }

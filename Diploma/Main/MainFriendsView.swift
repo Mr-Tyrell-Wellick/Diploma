@@ -8,23 +8,21 @@
 import UIKit
 import TinyConstraints
 
-protocol MainFriendsViewListener: AnyObject {
-    
+struct MainFriendsViewViewModel {
+    let image: UIImage
 }
 
 protocol MainFriendsViewPresentable: UIView {
-    
+    func showViewModel(_ viewModel: [MainFriendsViewViewModel])
 }
 
-class MainFriendsView: UIView, MainFriendsViewPresentable {
+final class MainFriendsView: UIView {
     
     convenience init() {
         self.init(frame: .zero)
         addView()
         addConstraints()
     }
-    
-    weak var listener: MainFriendsViewListener?
     
     // MARK: - Functions
     
@@ -37,7 +35,7 @@ class MainFriendsView: UIView, MainFriendsViewPresentable {
     }
     
     // MARK: - Properties
-
+    
     // Horizontal layout
     private lazy var horizontalLayout: UICollectionViewLayout = {
         $0.scrollDirection = .horizontal
@@ -51,44 +49,44 @@ class MainFriendsView: UIView, MainFriendsViewPresentable {
         $0.dataSource = self
         $0.delegate = self
         $0.register(
-            MainCell.self, forCellWithReuseIdentifier: "MainCellID"
+            FriendsAvatarsCell.self, forCellWithReuseIdentifier: "FriendsAvatarsCellID"
         )
         $0.register(
             UICollectionViewCell.self, forCellWithReuseIdentifier: "HorizontalDefaultCellID"
         )
         return $0
     }(UICollectionView(frame: frame, collectionViewLayout: self.horizontalLayout))
+    
+    private var viewModel: [MainFriendsViewViewModel] = []
+}
+
+extension MainFriendsView: MainFriendsViewPresentable {
+    func showViewModel(_ viewModel: [MainFriendsViewViewModel]) {
+        self.viewModel = viewModel
+        horizontalCollectionView.reloadData()
+    }
 }
 
 // MARK: - UICollectionViewDataSource
 
 extension MainFriendsView: UICollectionViewDataSource {
-    
     func collectionView(
         _ collectionView: UICollectionView, numberOfItemsInSection section: Int
     ) -> Int {
-        // TODO: - исправить!
-        //        return posts.count
-        return 0
+        viewModel.count
     }
     
     func collectionView(
         _ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "MainCellID",
+            withReuseIdentifier: "FriendsAvatarsCellID",
             for: indexPath
-        ) as? MainCell else {
-            return collectionView.dequeueReusableCell(
-                withReuseIdentifier: "HorizontalDefaultCellID",
-                for: indexPath
-            )
+        ) as? FriendsAvatarsCell else {
+            return UICollectionViewCell()
         }
         cell.setup()
-        // TODO: - исправить!
-//        cell.configure(with: authorViewModel[indexPath.row])
-        //        let post = posts[indexPath.item]
-        //        cell.configure(with: post.avatarImage)
+        cell.configure(with: viewModel[indexPath.row].image)
         return cell
     }
 }
@@ -96,7 +94,6 @@ extension MainFriendsView: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension MainFriendsView: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -110,6 +107,6 @@ extension MainFriendsView: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAt section: Int
     ) -> UIEdgeInsets {
-        UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
     }
 }

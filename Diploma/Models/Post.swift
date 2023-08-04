@@ -8,7 +8,7 @@
 import UIKit
 
 struct Post: Equatable {
-
+    
     let postTitle: String?
     let author: String?
     let description: String

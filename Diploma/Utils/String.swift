@@ -74,7 +74,7 @@ enum Strings: String {
     case myHeaderPostThree
 
     // MARK: - Favorite screen
-
+    
     case favoritesNavigationItem
     
     var localized: String {

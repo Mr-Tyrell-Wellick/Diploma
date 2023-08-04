@@ -20,5 +20,3 @@ public class PostModel: NSManagedObject {
         isFavorite = initialPost.isFavorite
     }
 }
-
-

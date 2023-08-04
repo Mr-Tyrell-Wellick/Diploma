@@ -25,14 +25,11 @@ final class LoggedOutComponent: Component<LoggedOutDependency> {
     }
     
     var biometryAuthenticationService: BiometryAuthenticationService
-    
     var firebaseAuthenticationService: FirebaseAuthenticationService
-    
     var userDefaultsStorage: UserDefaultsMutableStorage
 }
 
 extension LoggedOutComponent: SignUpDependency {
-    
 }
 
 protocol LoggedOutBuildable: Buildable {

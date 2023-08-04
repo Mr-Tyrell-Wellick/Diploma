@@ -20,7 +20,6 @@ extension UIColor {
         UIColor(named: "titleColor") ?? systemBackground
     }
     
-    
     // Buttons and TextFields
     class var buttonBackgroundColor: UIColor {
         UIColor(named: "buttonBackgroundColor") ?? systemBackground
@@ -56,7 +55,6 @@ extension UIColor {
         UIColor(named: "stripColor") ?? .gray
     }
     
-    
     // MARK: - TAbBar
     
     class var tabBarTintColor: UIColor {
@@ -67,7 +65,6 @@ extension UIColor {
         UIColor(named: "shadowTabBarColor") ?? .red
     }
     
-    
     // MARK: - Main Screen
     
     class var borderUserColor: UIColor {
@@ -77,4 +74,11 @@ extension UIColor {
     class var allScreenTapPostColor: UIColor {
         UIColor(named: "allScreenTapPostColor") ?? .systemGray6
     }
+
+// MARK: - Profile Screen
+
+    class var photoCollectionBackgroundColor: UIColor {
+        UIColor(named: "photoCollectionBackgroundColor") ?? .systemBackground
+    }
+
 }

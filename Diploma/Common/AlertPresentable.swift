@@ -40,7 +40,6 @@ extension AlertPresentable where Self: UIViewController {
             preferredStyle: .alert
         )
 
-        // TODO: - поиграться с настройками стилей
         viewModel.actions.forEach { viewModel in
             let style: UIAlertAction.Style
             switch viewModel.style {
