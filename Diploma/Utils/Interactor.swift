@@ -13,6 +13,6 @@ extension Interactable {
     }
 
     func logDeactivate() {
-print("Activated RIB: \(String(describing: self))")
+        print("Deactivated RIB: \(String(describing: self))")
     }
 }

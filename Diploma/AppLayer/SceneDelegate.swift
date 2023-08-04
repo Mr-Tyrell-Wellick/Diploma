@@ -24,29 +24,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
     }
 }
-
-
-
-
-
-
-
-//
-//        // MARK: - 1
-//        // Создаем coordinator и передаем в него transitionHandler
-//        rootCoordinator = RootCoordinator()
-//        let rootVC = rootCoordinator.build()
-//
-//        // MARK: - 2
-//        // обращаемся к методу, который позволяет кастомизировать TabBar под себя
-//        UITabBar.appearance().tintColor = UIColor .systemBlue
-//        UITabBar.appearance().backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1)
-//
-//        // MARK: - 3
-//        // заполняем окно, назначаем ему рутовый экран и делаем видимым
-//        let window = UIWindow(windowScene: windowScene)
-//        window.rootViewController = rootVC
-//        window.makeKeyAndVisible()
-//        self.window = window
-//    }
-//}
